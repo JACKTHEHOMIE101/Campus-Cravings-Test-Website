@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #181818;
+        --surface: #1f1f1f;
+        --border: #2a2a2a;
+        --gold: #FCAE25;
+        --amber: #F79024;
+        --orange: #F06520;
+        --off-white: #F5F5F0;
+        --muted: #5E5E5E;
+        --muted-lt: #9895a1;
+        --radius: 16px;
+        --pill: 50px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--bg);
+        color: var(--off-white);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background gradient orbs */
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 60% 40% at 20% 20%, rgba(252,174,37,0.07) 0%, transparent 70%),
+            radial-gradient(ellipse 50% 50% at 80% 80%, rgba(240,101,32,0.06) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .auth-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 40px 36px;
+        width: 100%;
+        max-width: 440px;
+        position: relative;
+        box-shadow:
+            0 0 0 1px rgba(252,174,37,0.06),
+            0 24px 60px rgba(0,0,0,0.5),
+            0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Logo */
+    .auth-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 32px;
+        text-decoration: none;
+    }
+    .auth-logo img {
+        width: 36px; height: 36px;
+        object-fit: contain;
+        border-radius: 50%;
+        filter: drop-shadow(0 0 6px rgba(252,174,37,0.5));
+    }
+    .auth-logo-name {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+        color: var(--gold);
+        letter-spacing: -0.02em;
+    }
+
+    /* Tab switcher */
+    .auth-tabs {
+        display: flex;
+        background: var(--bg);
+        border-radius: var(--pill);
+        padding: 4px;
+        margin-bottom: 28px;
+        border: 1px solid var(--border);
+    }
+    .auth-tab {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        background: transparent;
+        color: var(--muted-lt);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border-radius: var(--pill);
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .auth-tab.active {
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #181818;
+        font-weight: 600;
+    }
+    .auth-tab:hover:not(.active) { color: var(--off-white); }
+
+    /* Heading */
+    .auth-heading {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800;
+        font-size: 1.6rem;
+        letter-spacing: -0.03em;
+        margin-bottom: 6px;
+    }
+    .auth-sub {
+        font-size: 0.85rem;
+        color: var(--muted-lt);
+        line-height: 1.6;
+        margin-bottom: 28px;
+    }
+
+    /* Role selector (signup only) */
+    .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .role-btn {
+        padding: 12px 10px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg);
+        color: var(--muted-lt);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        transition: border-color 0.2s, color 0.2s, background 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    .role-btn .role-icon { font-size: 1.4rem; }
+    .role-btn.selected {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: rgba(252,174,37,0.07);
+    }
+    .role-btn:hover:not(.selected) {
+        border-color: var(--muted);
+        color: var(--off-white);
+    }
+
+    /* Form fields */
+    .field { margin-bottom: 16px; }
+    .field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--muted-lt);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    .field input {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        color: var(--off-white);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input::placeholder { color: var(--muted); }
+    .field input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(252,174,37,0.12);
+    }
+
+    /* Submit */
+    .btn-primary {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: var(--pill);
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #181818;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: opacity 0.2s, transform 0.15s;
+        box-shadow: 0 4px 20px rgba(252,174,37,0.25);
+    }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); opacity: 1; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Divider */
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+        color: var(--muted);
+        font-size: 0.75rem;
+    }
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--off-white);
+        padding: 12px 24px;
+        border-radius: var(--pill);
+        font-size: 0.85rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, transform 0.3s;
+        white-space: nowrap;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        z-index: 999;
+    }
+    .toast.error { border-color: #e05252; color: #f87171; }
+    .toast.success { border-color: var(--gold); color: var(--gold); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Hidden util */
+    .hidden { display: none !important; }
+
+    /* Forgot / back link */
+    .auth-link {
+        display: block;
+        text-align: center;
+        margin-top: 16px;
+        font-size: 0.8rem;
+        color: var(--muted-lt);
+    }
+    .auth-link a { color: var(--gold); text-decoration: none; }
+    .auth-link a:hover { text-decoration: underline; }
+
+    /* Loading spinner inside button */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+        display: inline-block;
+        width: 16px; height: 16px;
+        border: 2px solid rgba(24,24,24,0.3);
+        border-top-color: #181818;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+    <!-- Logo -->
+    <a href="index.html" class="auth-logo">
+        <img src="Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+        <span class="auth-logo-name">Campus Cravings</span>
+    </a>
+
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div id="form-signin">
+        <h1 class="auth-heading">Welcome back.</h1>
+        <p class="auth-sub">Sign in to see tonight's rankings.</p>
+
+        <div class="field">
+            <label>Email</label>
+            <input type="email" id="signin-email" placeholder="you@email.com" autocomplete="email" />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" id="signin-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+
+        <button class="btn-primary" id="signin-btn" onclick="handleSignIn()">Sign In</button>
+        <p class="auth-link"><a href="#" onclick="switchTab('signup'); return false;">No account? Create one free</a></p>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div id="form-signup" class="hidden">
+        <h1 class="auth-heading">Join the crew.</h1>
+        <p class="auth-sub">Create your account and start exploring.</p>
+
+        <!-- Role selector -->
+        <div class="role-selector">
+            <button class="role-btn selected" id="role-student" onclick="selectRole('student')">
+                <span class="role-icon">🎓</span>
+                <span>Student</span>
+            </button>
+            <button class="role-btn" id="role-bar_owner" onclick="selectRole('bar_owner')">
+                <span class="role-icon">🍺</span>
+                <span>Bar Owner</span>
+            </button>
+        </div>
+
+        <div class="field">
+            <label>Email</label>
+            <input type="email" id="signup-email" placeholder="you@mizzou.edu" autocomplete="email" />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" id="signup-password" placeholder="8+ characters" autocomplete="new-password" />
+        </div>
+
+        <button class="btn-primary" id="signup-btn" onclick="handleSignUp()">Create Account</button>
+        <p class="auth-link"><a href="#" onclick="switchTab('signin'); return false;">Already have an account? Sign in</a></p>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let selectedRole = 'student';
+
+// Redirect if already logged in
+(async () => {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) redirectByRole(session.user.id);
+})();
+
+function switchTab(tab) {
+    document.getElementById('form-signin').classList.toggle('hidden', tab !== 'signin');
+    document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+}
+
+function selectRole(role) {
+    selectedRole = role;
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('role-' + role).classList.add('selected');
+}
+
+function showToast(msg, type = 'error') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.innerHTML = loading
+        ? '<span class="spinner"></span>Please wait…'
+        : btn.dataset.label;
+}
+
+// Store default labels
+document.getElementById('signin-btn').dataset.label = 'Sign In';
+document.getElementById('signup-btn').dataset.label = 'Create Account';
+
+async function redirectByRole(userId) {
+    const { data: profile } = await db.from('profiles').select('role').eq('id', userId).single();
+    const role = profile?.role || 'student';
+    if (role === 'admin')     window.location.href = 'dashboard/admin.html';
+    else if (role === 'bar_owner') window.location.href = 'dashboard/bar-owner.html';
+    else                      window.location.href = 'dashboard/student.html';
+}
+
+async function handleSignIn() {
+    const email    = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+    if (!email || !password) return showToast('Please fill in all fields.');
+
+    setLoading('signin-btn', true);
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    setLoading('signin-btn', false);
+
+    if (error) return showToast(error.message);
+    showToast('Signed in!', 'success');
+    await redirectByRole(data.user.id);
+}
+
+async function handleSignUp() {
+    const email    = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    if (!email || !password) return showToast('Please fill in all fields.');
+    if (password.length < 8) return showToast('Password must be 8+ characters.');
+
+    setLoading('signup-btn', true);
+    const { data, error } = await db.auth.signUp({ email, password });
+    setLoading('signup-btn', false);
+
+    if (error) return showToast(error.message);
+
+    // Insert profile with selected role
+    const { error: profileError } = await db.from('profiles').insert({
+        id: data.user.id,
+        role: selectedRole,
+        email: email
+    });
+
+    if (profileError) {
+        console.error('Profile insert error:', profileError);
+    }
+
+    showToast('Account created! Check your email to confirm.', 'success');
+    setTimeout(() => switchTab('signin'), 2000);
+}
+</script>
+</body>
+</html>

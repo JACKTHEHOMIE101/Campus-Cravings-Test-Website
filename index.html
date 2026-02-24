@@ -217,7 +217,7 @@
         }
 
         .hero-logo-img {
-            width: 200px; height: 200px;
+            width: 400px; height: 400px;
             object-fit: contain;
             position: relative;
             z-index: 1;
@@ -1114,7 +1114,7 @@
         <li><a href="#stats">Stats</a></li>
         <li><a href="#footer">Contact</a></li>
     </ul>
-    <a href="#" class="btn btn-gold" style="font-size:0.78rem;padding:9px 22px">Check Rankings</a>
+    <a href="auth.html" class="btn btn-gold" style="font-size:0.78rem;padding:9px 22px">Sign In</a>
 </nav>
 
 <!-- ==============================
@@ -1139,7 +1139,7 @@
             Real rankings from real students — no ads, no algorithms. Just honest reviews from people who actually go to your school.
         </p>
         <div class="hero-cta">
-            <a href="#" class="btn btn-gold">Explore Rankings</a>
+            <a href="auth.html" class="btn btn-gold">Get Started</a>
             <a href="#decision" class="btn btn-ghost">Learn more &nbsp;→</a>
         </div>
     </div>
@@ -1655,6 +1655,18 @@ import { createNoise3D } from 'https://esm.sh/simplex-noise@4.0.3';
 
     render();
 })();
+</script>
+
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    console.log('[Supabase] Client initialized:', db);
 </script>
 </body>
 </html>
