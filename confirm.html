@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Confirming Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #181818; --surface: #1f1f1f; --border: #2a2a2a;
+        --gold: #FCAE25; --orange: #F06520; --off-white: #F5F5F0; --muted-lt: #9895a1;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg); color: var(--off-white);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        padding: 24px;
+    }
+    body::before {
+        content: '';
+        position: fixed; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 50% 40%, rgba(252,174,37,0.07) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 18px; padding: 48px 40px; width: 100%; max-width: 400px;
+        text-align: center;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(252,174,37,0.06);
+    }
+    .logo { margin-bottom: 28px; }
+    .logo img { width: 72px; height: 72px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 0 16px rgba(252,174,37,0.4)); }
+    .logo-name {
+        font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1rem;
+        color: var(--gold); letter-spacing: -0.02em; margin-top: 10px;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-wrap { margin: 0 auto 20px; width: 48px; height: 48px; }
+    .spinner-ring {
+        width: 48px; height: 48px;
+        border: 3px solid rgba(252,174,37,0.15);
+        border-top-color: var(--gold);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    /* Checkmark */
+    @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .check-wrap { margin: 0 auto 20px; width: 48px; height: 48px; display: none; }
+    .check-circle {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .status-title {
+        font-family: 'Raleway', sans-serif; font-weight: 800;
+        font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 8px;
+    }
+    .status-sub { font-size: 0.82rem; color: var(--muted-lt); line-height: 1.7; }
+    .status-sub a { color: var(--gold); text-decoration: none; }
+    .status-sub a:hover { text-decoration: underline; }
+
+    .error-box {
+        margin-top: 20px; padding: 14px 16px;
+        background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.25);
+        border-radius: 10px; font-size: 0.8rem; color: #f87171; line-height: 1.6;
+        display: none;
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <img src="Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+        <div class="logo-name">Campus Cravings</div>
+    </div>
+
+    <div class="spinner-wrap" id="spinner"><div class="spinner-ring"></div></div>
+    <div class="check-wrap" id="check"><div class="check-circle">✓</div></div>
+
+    <div class="status-title" id="title">Confirming your account…</div>
+    <p class="status-sub" id="sub">Hold tight, this only takes a second.</p>
+    <div class="error-box" id="error-box"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL     = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function showSuccess(msg) {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('check').style.display = 'block';
+    document.getElementById('title').textContent = 'You\'re confirmed!';
+    document.getElementById('sub').innerHTML = msg;
+}
+
+function showError(msg) {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('title').textContent = 'Something went wrong';
+    document.getElementById('sub').innerHTML = '<a href="auth.html">← Back to sign in</a>';
+    const box = document.getElementById('error-box');
+    box.textContent = msg;
+    box.style.display = 'block';
+}
+
+async function redirectByRole(userId) {
+    const { data: profile } = await db.from('profiles').select('role').eq('id', userId).single();
+    const role = profile?.role || 'student';
+    if (role === 'admin')      window.location.href = 'dashboard/admin.html';
+    else if (role === 'bar_owner') window.location.href = 'dashboard/bar-owner.html';
+    else                       window.location.href = 'dashboard/student.html';
+}
+
+(async () => {
+    // Supabase v2 automatically exchanges the token from the URL hash/params
+    const { data: { session }, error } = await db.auth.getSession();
+
+    if (error) {
+        showError(error.message);
+        return;
+    }
+
+    if (session) {
+        showSuccess('Taking you to your dashboard…');
+        setTimeout(() => redirectByRole(session.user.id), 1200);
+        return;
+    }
+
+    // Handle token_hash flow (email OTP / magic link style)
+    db.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+            showSuccess('Taking you to your dashboard…');
+            setTimeout(() => redirectByRole(session.user.id), 1200);
+        } else if (event === 'USER_UPDATED' && session) {
+            showSuccess('Taking you to your dashboard…');
+            setTimeout(() => redirectByRole(session.user.id), 1200);
+        }
+    });
+
+    // Fallback timeout
+    setTimeout(() => {
+        if (document.getElementById('spinner').style.display !== 'none') {
+            showError('Confirmation link may have expired. Please sign in or request a new link.');
+        }
+    }, 6000);
+})();
+</script>
+</body>
+</html>
