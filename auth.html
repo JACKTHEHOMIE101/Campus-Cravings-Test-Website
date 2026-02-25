@@ -425,7 +425,11 @@ async function handleSignUp() {
     if (password.length < 8) return showToast('Password must be 8+ characters.');
 
     setLoading('signup-btn', true);
-    const { data, error } = await db.auth.signUp({ email, password });
+    const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: 'https://campuscravings.app/confirm.html' }
+    });
     setLoading('signup-btn', false);
 
     if (error) return showToast(error.message);
