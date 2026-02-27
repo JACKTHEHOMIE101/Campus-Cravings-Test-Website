@@ -769,8 +769,13 @@ async function submitAndFinish() {
         crowd_preference:         answers.crowd_preference         || null,
     };
 
-    const { error } = await db.from('onboarding_responses').insert(payload);
-    if (error) console.error('Onboarding save error:', error);
+    // upsert handles duplicate-key errors (previous failed attempts)
+    const { error } = await db.from('onboarding_responses').upsert(payload, { onConflict: 'user_id' });
+    if (error) {
+        console.error('Onboarding save error:', error);
+    }
+    // localStorage fallback so student.html never loops even if DB write failed
+    try { localStorage.setItem('cc_onboarded_' + userId, '1'); } catch(_) {}
 
     setTimeout(() => { window.location.href = 'student.html'; }, 2200);
 }

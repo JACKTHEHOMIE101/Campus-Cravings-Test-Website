@@ -583,9 +583,10 @@ function showToast(msg) {
     if (profile?.role === 'admin')     { window.location.href = 'admin.html'; return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    // Only proceed if onboarding row is confirmed present
+    // Check DB row OR localStorage fallback (in case DB write failed)
     const { data: onboarding } = await db.from('onboarding_responses').select('id').eq('user_id', session.user.id).single();
-    if (!onboarding) { window.location.href = 'onboarding.html'; return; }
+    const donedLocally = localStorage.getItem('cc_onboarded_' + session.user.id);
+    if (!onboarding && !donedLocally) { window.location.href = 'onboarding.html'; return; }
 
     const handle = session.user.email.split('@')[0];
     document.getElementById('user-email').textContent = session.user.email;
