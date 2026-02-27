@@ -628,9 +628,9 @@ let userId      = null;
     if (profile?.role === 'admin')     { window.location.href = 'admin.html';     return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    // Already completed onboarding?
-    const { data: existing } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
-    if (existing) { window.location.href = 'student.html'; return; }
+    // Already completed onboarding? (data present = row exists, or non-PGRST116 error = table issue → skip to dashboard)
+    const { data: existing, error: existErr } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
+    if (existing || (existErr && existErr.code !== 'PGRST116')) { window.location.href = 'student.html'; return; }
 
     renderQuestion(false);
 })();

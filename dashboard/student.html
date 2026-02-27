@@ -583,9 +583,9 @@ function showToast(msg) {
     if (profile?.role === 'admin')     { window.location.href = 'admin.html'; return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    // Gate on onboarding completion
-    const { data: onboarding } = await db.from('onboarding_responses').select('id').eq('user_id', session.user.id).single();
-    if (!onboarding) { window.location.href = 'onboarding.html'; return; }
+    // Gate on onboarding completion — PGRST116 means no row exists (needs onboarding)
+    const { data: onboarding, error: obErr } = await db.from('onboarding_responses').select('id').eq('user_id', session.user.id).single();
+    if (obErr?.code === 'PGRST116') { window.location.href = 'onboarding.html'; return; }
 
     const handle = session.user.email.split('@')[0];
     document.getElementById('user-email').textContent = session.user.email;
