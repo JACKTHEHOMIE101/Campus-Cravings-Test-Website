@@ -628,9 +628,10 @@ let userId      = null;
     if (profile?.role === 'admin')     { window.location.href = 'admin.html';     return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    // Only skip to dashboard if we positively confirm a row exists
+    // Skip if DB row exists OR localStorage flag set (covers DB write failures)
     const { data: existing } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
-    if (existing) { window.location.href = 'student.html'; return; }
+    const doneLocally = localStorage.getItem('cc_onboarded_' + userId);
+    if (existing || doneLocally) { window.location.href = 'student.html'; return; }
 
     renderQuestion(false);
 })();
