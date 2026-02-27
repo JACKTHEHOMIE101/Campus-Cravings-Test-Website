@@ -360,6 +360,17 @@
     </div>
 </div>
 
+<!-- Already signed in overlay -->
+<div id="already-in" class="hidden" style="position:fixed;inset:0;background:rgba(24,24,24,0.95);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div style="background:#1f1f1f;border:1px solid #2a2a2a;border-radius:18px;padding:36px 32px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.5);">
+        <div style="font-size:2rem;margin-bottom:12px;">👋</div>
+        <h2 style="font-family:'Raleway',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px;letter-spacing:-0.02em;">You're already signed in</h2>
+        <p style="font-size:0.82rem;color:#9895a1;line-height:1.7;margin-bottom:24px;">as <strong id="already-email" style="color:#F5F5F0;"></strong></p>
+        <button onclick="goToDashboard()" style="width:100%;padding:13px;border:none;border-radius:50px;background:linear-gradient(135deg,#FCAE25,#F06520);color:#181818;font-family:'Raleway',sans-serif;font-weight:800;font-size:0.9rem;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(252,174,37,0.25);">Go to Dashboard</button>
+        <button onclick="forceSignOut()" style="width:100%;padding:13px;border:1.5px solid #2a2a2a;border-radius:50px;background:transparent;color:#9895a1;font-family:'Poppins',sans-serif;font-size:0.85rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='#F5F5F0';this.style.borderColor='#5E5E5E'" onmouseout="this.style.color='#9895a1';this.style.borderColor='#2a2a2a'">Sign Out &amp; Create New Account</button>
+    </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Supabase -->
@@ -372,11 +383,28 @@ const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let selectedRole = 'student';
 
-// Redirect if already logged in
+let currentSession = null;
+
+// Check if already logged in — show overlay instead of silently redirecting
 (async () => {
     const { data: { session } } = await db.auth.getSession();
-    if (session) redirectByRole(session.user.id);
+    if (!session) return;
+    currentSession = session;
+    document.getElementById('already-email').textContent = session.user.email;
+    document.getElementById('already-in').classList.remove('hidden');
+    document.getElementById('already-in').style.display = 'flex';
 })();
+
+async function goToDashboard() {
+    if (currentSession) await redirectByRole(currentSession.user.id);
+}
+
+async function forceSignOut() {
+    await db.auth.signOut();
+    document.getElementById('already-in').style.display = 'none';
+    document.getElementById('already-in').classList.add('hidden');
+    currentSession = null;
+}
 
 function switchTab(tab) {
     document.getElementById('form-signin').classList.toggle('hidden', tab !== 'signin');
