@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Page Not Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #181818; --surface: #1f1f1f; --border: #2a2a2a;
+        --gold: #FCAE25; --orange: #F06520; --off-white: #F5F5F0; --muted-lt: #9895a1;
+        --pill: 50px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif;
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        padding: 24px; text-align: center;
+    }
+    body::before {
+        content: ''; position: fixed; inset: 0;
+        background: radial-gradient(ellipse 50% 40% at 50% 40%, rgba(252,174,37,0.06) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .wrap { max-width: 400px; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; margin-bottom: 40px; }
+    .logo img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 0 6px rgba(252,174,37,0.5)); }
+    .logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1rem; color: var(--gold); letter-spacing: -0.02em; }
+    .code { font-family: 'Raleway', sans-serif; font-weight: 900; font-size: 6rem; line-height: 1; letter-spacing: -0.05em; background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+    .title { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .sub { font-size: 0.85rem; color: var(--muted-lt); line-height: 1.7; margin-bottom: 32px; }
+    .btn {
+        display: inline-block; padding: 13px 32px; border-radius: var(--pill);
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #181818; font-family: 'Raleway', sans-serif; font-weight: 800;
+        font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase;
+        text-decoration: none; transition: opacity 0.2s, transform 0.15s;
+        box-shadow: 0 4px 20px rgba(252,174,37,0.25);
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <a href="index.html" class="logo">
+        <img src="Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+        <span class="logo-name">Campus Cravings</span>
+    </a>
+    <div class="code">404</div>
+    <h1 class="title">Nothing to see here.</h1>
+    <p class="sub">The page you're looking for doesn't exist or may have moved. Head back home and find somewhere to eat tonight.</p>
+    <a href="index.html" class="btn">Back to Home</a>
+</div>
+</body>
+</html>

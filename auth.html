@@ -311,7 +311,22 @@
         </div>
 
         <button class="btn-primary" id="signin-btn" onclick="handleSignIn()">Sign In</button>
-        <p class="auth-link"><a href="#" onclick="switchTab('signup'); return false;">No account? Create one free</a></p>
+        <p class="auth-link"><a href="#" onclick="switchTab('forgot'); return false;">Forgot password?</a></p>
+        <p class="auth-link" style="margin-top:8px"><a href="#" onclick="switchTab('signup'); return false;">No account? Create one free</a></p>
+    </div>
+
+    <!-- FORGOT PASSWORD FORM -->
+    <div id="form-forgot" class="hidden">
+        <h1 class="auth-heading">Reset password.</h1>
+        <p class="auth-sub">Enter your email and we'll send you a reset link.</p>
+
+        <div class="field">
+            <label>Email</label>
+            <input type="email" id="forgot-email" placeholder="you@email.com" autocomplete="email" />
+        </div>
+
+        <button class="btn-primary" id="forgot-btn" onclick="handleForgot()">Send Reset Link</button>
+        <p class="auth-link" style="margin-top:12px"><a href="#" onclick="switchTab('signin'); return false;">← Back to sign in</a></p>
     </div>
 
     <!-- SIGN UP FORM -->
@@ -366,6 +381,7 @@ let selectedRole = 'student';
 function switchTab(tab) {
     document.getElementById('form-signin').classList.toggle('hidden', tab !== 'signin');
     document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+    document.getElementById('form-forgot').classList.toggle('hidden', tab !== 'forgot');
     document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
     document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
 }
@@ -395,6 +411,7 @@ function setLoading(btnId, loading) {
 // Store default labels
 document.getElementById('signin-btn').dataset.label = 'Sign In';
 document.getElementById('signup-btn').dataset.label = 'Create Account';
+document.getElementById('forgot-btn').dataset.label = 'Send Reset Link';
 
 async function redirectByRole(userId) {
     const { data: profile } = await db.from('profiles').select('role').eq('id', userId).single();
@@ -416,6 +433,20 @@ async function handleSignIn() {
     if (error) return showToast(error.message);
     showToast('Signed in!', 'success');
     await redirectByRole(data.user.id);
+}
+
+async function handleForgot() {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (!email) return showToast('Please enter your email.');
+
+    setLoading('forgot-btn', true);
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset.html'
+    });
+    setLoading('forgot-btn', false);
+
+    if (error) return showToast(error.message);
+    showToast('Reset link sent! Check your inbox.', 'success');
 }
 
 async function handleSignUp() {

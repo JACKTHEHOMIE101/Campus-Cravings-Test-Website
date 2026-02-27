@@ -124,38 +124,38 @@
         <div class="card">
             <div class="card-icon">🍺</div>
             <div class="card-label">Bars Listed</div>
-            <div class="card-value" id="stat-bars">—</div>
+            <div class="card-value" id="stat-bars">0</div>
         </div>
         <div class="card">
             <div class="card-icon">📍</div>
             <div class="card-label">Check-Ins Today</div>
-            <div class="card-value" id="stat-checkins">—</div>
+            <div class="card-value" id="stat-checkins">0</div>
         </div>
         <div class="card">
             <div class="card-icon">🗳️</div>
             <div class="card-label">Votes Today</div>
-            <div class="card-value" id="stat-votes">—</div>
+            <div class="card-value" id="stat-votes">0</div>
         </div>
     </div>
 
     <div class="section-title">Quick Actions</div>
     <div class="action-grid">
-        <div class="action-card">
+        <div class="action-card" onclick="showToast('Bar management coming soon!')">
             <div class="ac-icon">🍺</div>
             <div class="ac-title">Manage Bars</div>
             <div class="ac-desc">Add, edit, or remove bar listings from the platform.</div>
         </div>
-        <div class="action-card">
+        <div class="action-card" onclick="showToast('Ranking engine coming soon!')">
             <div class="ac-icon">📊</div>
             <div class="ac-title">Run Rankings</div>
             <div class="ac-desc">Trigger nightly ranking computation manually.</div>
         </div>
-        <div class="action-card">
+        <div class="action-card" onclick="document.getElementById('users-container').scrollIntoView({behavior:'smooth'})">
             <div class="ac-icon">👥</div>
             <div class="ac-title">User Management</div>
             <div class="ac-desc">View all users, change roles, or suspend accounts.</div>
         </div>
-        <div class="action-card">
+        <div class="action-card" onclick="showToast('Moderation tools coming soon!')">
             <div class="ac-icon">🛡️</div>
             <div class="ac-title">Moderation</div>
             <div class="ac-desc">Review flagged check-ins and votes.</div>
@@ -168,9 +168,13 @@
     </div>
 
     <div class="section-title" style="margin-top:28px;">Recent Activity</div>
-    <div class="placeholder">
-        <span>📋</span>
-        Activity log will appear here once check-ins and votes are live.
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 4px 20px rgba(0,0,0,0.2);">
+        <div style="width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:linear-gradient(135deg,rgba(252,174,37,0.12),rgba(240,101,32,0.08));border:1px solid rgba(252,174,37,0.15);">📋</div>
+        <div>
+            <div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.95rem;margin-bottom:4px;">Activity Log</div>
+            <div style="font-size:0.78rem;color:var(--muted-lt);line-height:1.6;">Check-ins, votes, and signups will stream here once the platform goes live.</div>
+        </div>
+        <span style="margin-left:auto;flex-shrink:0;padding:4px 12px;border-radius:50px;background:rgba(252,174,37,0.1);border:1px solid rgba(252,174,37,0.2);font-size:0.65rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:0.06em;">Coming Soon</span>
     </div>
 </main>
 
@@ -231,6 +235,19 @@ async function loadUsers() {
             </table>
         </div>
     `;
+}
+
+function showToast(msg) {
+    let t = document.getElementById('admin-toast');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = 'admin-toast';
+        t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f1f1f;border:1px solid #2a2a2a;color:#F5F5F0;padding:10px 22px;border-radius:50px;font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;font-family:Poppins,sans-serif;';
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2500);
 }
 
 async function signOut() {

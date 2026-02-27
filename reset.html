@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Reset Password</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #181818; --surface: #1f1f1f; --border: #2a2a2a;
+        --gold: #FCAE25; --amber: #F79024; --orange: #F06520;
+        --off-white: #F5F5F0; --muted: #5E5E5E; --muted-lt: #9895a1;
+        --radius: 16px; --pill: 50px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: var(--bg); color: var(--off-white);
+        font-family: 'Poppins', sans-serif; min-height: 100vh;
+        display: flex; align-items: center; justify-content: center; padding: 24px 16px;
+    }
+    body::before {
+        content: ''; position: fixed; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 50% 30%, rgba(252,174,37,0.07) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 40px 36px; width: 100%; max-width: 440px; position: relative;
+        box-shadow: 0 0 0 1px rgba(252,174,37,0.06), 0 24px 60px rgba(0,0,0,0.5);
+    }
+    .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; text-decoration: none; }
+    .auth-logo img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 0 6px rgba(252,174,37,0.5)); }
+    .auth-logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1rem; color: var(--gold); letter-spacing: -0.02em; }
+    .heading { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.03em; margin-bottom: 6px; }
+    .sub { font-size: 0.85rem; color: var(--muted-lt); line-height: 1.6; margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--muted-lt); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .field input {
+        width: 100%; padding: 12px 16px; background: var(--bg);
+        border: 1.5px solid var(--border); border-radius: 10px;
+        color: var(--off-white); font-family: 'Poppins', sans-serif; font-size: 0.9rem; outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input::placeholder { color: var(--muted); }
+    .field input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(252,174,37,0.12); }
+    .btn-primary {
+        width: 100%; padding: 14px; border: none; border-radius: var(--pill);
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #181818; font-family: 'Raleway', sans-serif; font-weight: 800;
+        font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase;
+        cursor: pointer; margin-top: 8px; transition: opacity 0.2s, transform 0.15s;
+        box-shadow: 0 4px 20px rgba(252,174,37,0.25);
+    }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .back-link { display: block; text-align: center; margin-top: 16px; font-size: 0.8rem; color: var(--muted-lt); }
+    .back-link a { color: var(--gold); text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
+    .error-box {
+        margin-top: 16px; padding: 12px 16px;
+        background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.25);
+        border-radius: 10px; font-size: 0.8rem; color: #f87171; line-height: 1.6; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+        display: inline-block; width: 16px; height: 16px;
+        border: 2px solid rgba(24,24,24,0.3); border-top-color: #181818;
+        border-radius: 50%; animation: spin 0.7s linear infinite;
+        vertical-align: middle; margin-right: 6px;
+    }
+    .toast {
+        position: fixed; bottom: 28px; left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--surface); border: 1px solid var(--border);
+        color: var(--off-white); padding: 12px 24px; border-radius: var(--pill);
+        font-size: 0.85rem; opacity: 0; pointer-events: none;
+        transition: opacity 0.3s, transform 0.3s; white-space: nowrap;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 999;
+    }
+    .toast.success { border-color: var(--gold); color: var(--gold); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="card">
+    <a href="auth.html" class="auth-logo">
+        <img src="Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+        <span class="auth-logo-name">Campus Cravings</span>
+    </a>
+
+    <!-- New password form -->
+    <div id="form-reset">
+        <h1 class="heading">Set new password.</h1>
+        <p class="sub">Choose a strong password for your account.</p>
+
+        <div class="field">
+            <label>New Password</label>
+            <input type="password" id="password" placeholder="8+ characters" autocomplete="new-password" />
+        </div>
+        <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" id="confirm" placeholder="Repeat password" autocomplete="new-password" />
+        </div>
+
+        <div class="error-box" id="error-box"></div>
+        <button class="btn-primary" id="reset-btn" onclick="handleReset()">Update Password</button>
+        <p class="back-link"><a href="auth.html">← Back to sign in</a></p>
+    </div>
+
+    <!-- Invalid / expired link state -->
+    <div id="form-invalid" class="hidden">
+        <h1 class="heading">Link expired.</h1>
+        <p class="sub">This password reset link has expired or is invalid. Request a new one from the sign in page.</p>
+        <a href="auth.html" style="display:block;margin-top:20px">
+            <button class="btn-primary">Back to Sign In</button>
+        </a>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL      = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let sessionReady = false;
+
+// Supabase puts the recovery token in the URL — onAuthStateChange picks it up
+db.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+        sessionReady = true; // user is authenticated via reset link
+    }
+});
+
+// If no recovery token after a moment, show expired state
+setTimeout(() => {
+    if (!sessionReady) {
+        db.auth.getSession().then(({ data: { session } }) => {
+            if (!session) {
+                document.getElementById('form-reset').classList.add('hidden');
+                document.getElementById('form-invalid').classList.remove('hidden');
+            } else {
+                sessionReady = true;
+            }
+        });
+    }
+}, 1500);
+
+function showToast(msg, type = 'error') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function showError(msg) {
+    const box = document.getElementById('error-box');
+    box.textContent = msg;
+    box.style.display = 'block';
+}
+
+async function handleReset() {
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirm').value;
+    document.getElementById('error-box').style.display = 'none';
+
+    if (!password || !confirm) return showError('Please fill in both fields.');
+    if (password.length < 8)   return showError('Password must be at least 8 characters.');
+    if (password !== confirm)  return showError('Passwords do not match.');
+
+    const btn = document.getElementById('reset-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Updating…';
+
+    const { error } = await db.auth.updateUser({ password });
+
+    btn.disabled = false;
+    btn.textContent = 'Update Password';
+
+    if (error) return showError(error.message);
+
+    showToast('Password updated! Redirecting…', 'success');
+    setTimeout(() => window.location.href = 'auth.html', 2000);
+}
+</script>
+</body>
+</html>

@@ -15,7 +15,7 @@
         --pill: 50px; --radius: 14px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; }
+    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; padding-bottom: 80px; }
 
     nav {
         display: flex; align-items: center; justify-content: space-between;
@@ -45,10 +45,7 @@
     .page-sub { font-size: 0.85rem; color: var(--muted-lt); margin-bottom: 32px; line-height: 1.6; }
 
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .card {
-        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-        padding: 22px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
     .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
     .card-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-lt); margin-bottom: 4px; }
     .card-value { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--gold); }
@@ -60,14 +57,26 @@
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .placeholder {
-        background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius);
-        padding: 40px 24px; text-align: center; color: var(--muted);
-        font-size: 0.85rem; line-height: 1.7;
+    .coming-card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 28px 24px; display: flex; align-items: center; gap: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    .placeholder span { display: block; font-size: 1.8rem; margin-bottom: 8px; }
+    .coming-card-icon {
+        width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+        background: linear-gradient(135deg, rgba(252,174,37,0.12), rgba(240,101,32,0.08));
+        border: 1px solid rgba(252,174,37,0.15);
+    }
+    .coming-card-text h3 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .coming-card-text p { font-size: 0.78rem; color: var(--muted-lt); line-height: 1.6; }
+    .coming-badge {
+        margin-left: auto; flex-shrink: 0; padding: 4px 12px; border-radius: var(--pill);
+        background: rgba(252,174,37,0.1); border: 1px solid rgba(252,174,37,0.2);
+        font-size: 0.65rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em;
+    }
 
-    /* Claim bar CTA */
+    /* Claim CTA */
     .cta-box {
         background: linear-gradient(135deg, rgba(252,174,37,0.1), rgba(240,101,32,0.07));
         border: 1px solid rgba(252,174,37,0.2); border-radius: var(--radius);
@@ -81,11 +90,59 @@
         background: linear-gradient(135deg, var(--gold), var(--orange));
         color: #181818; font-family: 'Raleway', sans-serif; font-weight: 800;
         font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase;
-        cursor: pointer; white-space: nowrap;
-        transition: opacity 0.2s, transform 0.15s;
+        cursor: pointer; white-space: nowrap; transition: opacity 0.2s, transform 0.15s;
         box-shadow: 0 4px 16px rgba(252,174,37,0.25);
     }
     .btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* Modal */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100;
+        display: flex; align-items: center; justify-content: center; padding: 24px;
+        opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+        background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+        padding: 32px 28px; width: 100%; max-width: 420px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.6); transform: translateY(16px); transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal h2 { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 6px; }
+    .modal p { font-size: 0.82rem; color: var(--muted-lt); margin-bottom: 20px; line-height: 1.6; }
+    .modal .field { margin-bottom: 14px; }
+    .modal .field label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--muted-lt); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .modal .field input {
+        width: 100%; padding: 11px 14px; background: var(--bg);
+        border: 1.5px solid var(--border); border-radius: 10px;
+        color: var(--off-white); font-family: 'Poppins', sans-serif; font-size: 0.88rem; outline: none;
+        transition: border-color 0.2s;
+    }
+    .modal .field input:focus { border-color: var(--gold); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-cancel {
+        flex: 1; padding: 11px; border: 1.5px solid var(--border); border-radius: var(--pill);
+        background: transparent; color: var(--muted-lt); font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-cancel:hover { border-color: var(--muted); color: var(--off-white); }
+
+    /* Bottom nav */
+    .bottom-nav {
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+        background: var(--surface); border-top: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-around; padding: 10px 0 16px;
+    }
+    .bnav-item {
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        text-decoration: none; color: var(--muted-lt);
+        font-size: 0.62rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+        transition: color 0.2s; padding: 4px 16px; border-radius: 10px;
+        cursor: pointer; background: none; border: none; font-family: 'Poppins', sans-serif;
+    }
+    .bnav-item:hover { color: var(--off-white); }
+    .bnav-item.active { color: var(--gold); }
+    .bnav-icon { font-size: 1.3rem; }
 </style>
 </head>
 <body>
@@ -108,51 +165,65 @@
     <h1 class="page-title">Bar Owner Dashboard</h1>
     <p class="page-sub">Manage your listing, track check-ins, and see your rankings.</p>
 
-    <!-- Claim bar CTA -->
     <div class="cta-box">
         <div>
             <h2>Claim Your Bar</h2>
             <p>Link your account to your bar listing to start seeing stats and managing your profile.</p>
         </div>
-        <button class="btn-gold">Claim Bar →</button>
+        <button class="btn-gold" onclick="openModal()">Claim Bar →</button>
     </div>
 
     <div class="cards">
-        <div class="card">
-            <div class="card-icon">📍</div>
-            <div class="card-label">Tonight's Check-Ins</div>
-            <div class="card-value" id="stat-checkins">—</div>
-        </div>
-        <div class="card">
-            <div class="card-icon">⭐</div>
-            <div class="card-label">Current Rank</div>
-            <div class="card-value" id="stat-rank">—</div>
-        </div>
-        <div class="card">
-            <div class="card-icon">🗳️</div>
-            <div class="card-label">Total Votes</div>
-            <div class="card-value" id="stat-votes">—</div>
-        </div>
-        <div class="card">
-            <div class="card-icon">📈</div>
-            <div class="card-label">Score</div>
-            <div class="card-value" id="stat-score">—</div>
-        </div>
+        <div class="card"><div class="card-icon">📍</div><div class="card-label">Tonight's Check-Ins</div><div class="card-value">0</div></div>
+        <div class="card"><div class="card-icon">⭐</div><div class="card-label">Current Rank</div><div class="card-value" style="font-size:1rem;padding-top:6px;">Unranked</div></div>
+        <div class="card"><div class="card-icon">🗳️</div><div class="card-label">Total Votes</div><div class="card-value">0</div></div>
+        <div class="card"><div class="card-icon">📈</div><div class="card-label">Score</div><div class="card-value">0</div></div>
     </div>
 
     <div class="section-title">Recent Activity</div>
-    <div class="placeholder">
-        <span>📊</span>
-        Claim your bar to start seeing check-ins and votes in real time.
+    <div class="coming-card">
+        <div class="coming-card-icon">📊</div>
+        <div class="coming-card-text">
+            <h3>Live Activity Feed</h3>
+            <p>See check-ins and votes from students at your bar in real time as the night unfolds.</p>
+        </div>
+        <span class="coming-badge">Coming Soon</span>
     </div>
 
     <div class="section-title" style="margin-top:28px;">Bar Profile</div>
-    <div class="placeholder">
-        <span>🍺</span>
-        Your bar profile will appear here after claiming.<br/>
-        Add photos, hours, specials, and more.
+    <div class="coming-card">
+        <div class="coming-card-icon">🍺</div>
+        <div class="coming-card-text">
+            <h3>Profile Editor</h3>
+            <p>Add photos, hours, drink specials, and a description to attract more students.</p>
+        </div>
+        <span class="coming-badge">Coming Soon</span>
     </div>
 </main>
+
+<!-- Claim Bar Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+    <div class="modal">
+        <h2>Claim Your Bar</h2>
+        <p>Tell us your bar name and we'll reach out to verify and link your account within 24 hours.</p>
+        <div class="field"><label>Bar Name</label><input type="text" id="bar-name" placeholder="e.g. Harpo's Bar & Grill" /></div>
+        <div class="field"><label>Your Role / Title</label><input type="text" id="bar-role" placeholder="e.g. Owner, Manager" /></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-gold" style="flex:1" onclick="submitClaim()">Submit Claim</button>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+    <a href="../index.html" class="bnav-item"><span class="bnav-icon">🏠</span>Home</a>
+    <button class="bnav-item active"><span class="bnav-icon">📊</span>Dashboard</button>
+    <button class="bnav-item" onclick="openModal()"><span class="bnav-icon">🍺</span>Claim Bar</button>
+    <button class="bnav-item" onclick="showToast('Analytics coming soon!')"><span class="bnav-icon">📈</span>Analytics</button>
+</nav>
+
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f1f1f;border:1px solid #2a2a2a;color:#F5F5F0;padding:10px 22px;border-radius:50px;font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;font-family:'Poppins',sans-serif;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -160,6 +231,22 @@ const SUPABASE_URL = 'https://dzysbtdgmzaydixomdpj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2500);
+}
+function openModal() { document.getElementById('modal-overlay').classList.add('open'); }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOnBg(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+function submitClaim() {
+    const name = document.getElementById('bar-name').value.trim();
+    if (!name) { showToast('Please enter your bar name.'); return; }
+    closeModal();
+    showToast('Request submitted! We\'ll reach out within 24 hours.');
+}
 
 (async () => {
     const { data: { session } } = await db.auth.getSession();

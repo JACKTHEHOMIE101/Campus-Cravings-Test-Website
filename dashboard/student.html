@@ -15,9 +15,8 @@
         --pill: 50px; --radius: 14px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; }
+    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; padding-bottom: 80px; }
 
-    /* Nav */
     nav {
         display: flex; align-items: center; justify-content: space-between;
         padding: 16px 24px; border-bottom: 1px solid var(--border);
@@ -35,24 +34,19 @@
     }
     .btn-signout:hover { border-color: var(--orange); color: var(--orange); }
 
-    /* Main */
     main { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
-
     .page-title { font-family: 'Raleway', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -0.03em; margin-bottom: 4px; }
     .page-sub { font-size: 0.85rem; color: var(--muted-lt); margin-bottom: 32px; line-height: 1.6; }
 
-    /* Cards grid */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
     .card {
         background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-        padding: 24px 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        padding: 24px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
     }
     .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
     .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-lt); margin-bottom: 4px; }
     .card-value { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--gold); }
 
-    /* Section */
     .section-title {
         font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 1rem;
         letter-spacing: -0.01em; margin-bottom: 14px;
@@ -60,13 +54,43 @@
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    /* Coming soon placeholder */
-    .placeholder {
-        background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius);
-        padding: 40px 24px; text-align: center; color: var(--muted);
-        font-size: 0.85rem; line-height: 1.7;
+    /* Styled coming-soon cards */
+    .coming-card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 28px 24px; display: flex; align-items: center; gap: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    .placeholder span { display: block; font-size: 1.8rem; margin-bottom: 8px; }
+    .coming-card-icon {
+        width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, rgba(252,174,37,0.12), rgba(240,101,32,0.08));
+        border: 1px solid rgba(252,174,37,0.15);
+    }
+    .coming-card-text h3 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .coming-card-text p { font-size: 0.78rem; color: var(--muted-lt); line-height: 1.6; }
+    .coming-badge {
+        margin-left: auto; flex-shrink: 0; padding: 4px 12px; border-radius: var(--pill);
+        background: rgba(252,174,37,0.1); border: 1px solid rgba(252,174,37,0.2);
+        font-size: 0.65rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* Bottom mobile nav */
+    .bottom-nav {
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+        background: var(--surface); border-top: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-around;
+        padding: 10px 0 16px;
+    }
+    .bnav-item {
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        text-decoration: none; color: var(--muted-lt);
+        font-size: 0.62rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+        transition: color 0.2s; padding: 4px 16px; border-radius: 10px; cursor: pointer; background: none; border: none; font-family: 'Poppins', sans-serif;
+    }
+    .bnav-item:hover { color: var(--off-white); }
+    .bnav-item.active { color: var(--gold); }
+    .bnav-icon { font-size: 1.3rem; }
 </style>
 </head>
 <body>
@@ -90,34 +114,69 @@
         <div class="card">
             <div class="card-icon">📍</div>
             <div class="card-label">Check-Ins</div>
-            <div class="card-value" id="stat-checkins">—</div>
+            <div class="card-value" id="stat-checkins">0</div>
         </div>
         <div class="card">
             <div class="card-icon">🗳️</div>
             <div class="card-label">Votes Cast</div>
-            <div class="card-value" id="stat-votes">—</div>
+            <div class="card-value" id="stat-votes">0</div>
         </div>
         <div class="card">
             <div class="card-icon">🏆</div>
             <div class="card-label">Top Bar Tonight</div>
-            <div class="card-value" id="stat-topbar">—</div>
+            <div class="card-value" id="stat-topbar" style="font-size:1rem;padding-top:4px;">Coming soon</div>
         </div>
     </div>
 
     <div class="section-title">Tonight's Rankings</div>
-    <div class="placeholder">
-        <span>🍽️</span>
-        Rankings will appear here once bars are set up and voting opens.<br />
-        Check back after 6 PM!
+    <div class="coming-card">
+        <div class="coming-card-icon">🏆</div>
+        <div class="coming-card-text">
+            <h3>Nightly Rankings</h3>
+            <p>See which bars are topping the charts tonight based on real student votes and check-ins.</p>
+        </div>
+        <span class="coming-badge">Coming Soon</span>
     </div>
 
-    <div class="section-title" style="margin-top:28px;">Recent Check-Ins</div>
-    <div class="placeholder">
-        <span>📍</span>
-        You haven't checked in anywhere yet.<br />
-        Find a spot and let your crew know where you're at.
+    <div class="section-title" style="margin-top:28px;">Check In</div>
+    <div class="coming-card">
+        <div class="coming-card-icon">📍</div>
+        <div class="coming-card-text">
+            <h3>One-Tap Check In</h3>
+            <p>Let your crew know where you're at and boost your bar's ranking for the night.</p>
+        </div>
+        <span class="coming-badge">Coming Soon</span>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">Vote & Rate</div>
+    <div class="coming-card">
+        <div class="coming-card-icon">🗳️</div>
+        <div class="coming-card-text">
+            <h3>Poll Sliders</h3>
+            <p>Rate bars on vibe, value, and crowd. Your votes shape the nightly leaderboard.</p>
+        </div>
+        <span class="coming-badge">Coming Soon</span>
     </div>
 </main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+    <a href="../index.html" class="bnav-item">
+        <span class="bnav-icon">🏠</span>Home
+    </a>
+    <button class="bnav-item active">
+        <span class="bnav-icon">📊</span>Dashboard
+    </button>
+    <button class="bnav-item" onclick="showToast('Check-ins coming soon!')">
+        <span class="bnav-icon">📍</span>Check In
+    </button>
+    <button class="bnav-item" onclick="showToast('Rankings coming soon!')">
+        <span class="bnav-icon">🏆</span>Rankings
+    </button>
+</nav>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f1f1f;border:1px solid #2a2a2a;color:#F5F5F0;padding:10px 22px;border-radius:50px;font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;font-family:'Poppins',sans-serif;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -126,17 +185,22 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Auth guard
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2500);
+}
+
 (async () => {
     const { data: { session } } = await db.auth.getSession();
     if (!session) { window.location.href = '../auth.html'; return; }
 
-    // Check role — only students allowed here
     const { data: profile } = await db.from('profiles').select('role').eq('id', session.user.id).single();
     if (profile?.role === 'admin')     { window.location.href = 'admin.html'; return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    // Populate UI
     const email = session.user.email;
     document.getElementById('user-email').textContent = email;
     document.getElementById('greeting').textContent = 'Hey, ' + email.split('@')[0] + ' 👋';
