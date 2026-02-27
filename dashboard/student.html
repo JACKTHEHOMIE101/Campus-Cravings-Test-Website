@@ -3,180 +3,541 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Campus Cravings — Student Dashboard</title>
+<title>Campus Cravings — Tonight</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
     :root {
-        --bg: #181818; --surface: #1f1f1f; --border: #2a2a2a;
-        --gold: #FCAE25; --amber: #F79024; --orange: #F06520;
-        --off-white: #F5F5F0; --muted: #5E5E5E; --muted-lt: #9895a1;
-        --pill: 50px; --radius: 14px;
+        --bg: #111113;
+        --surface: #18181c;
+        --surface2: #1e1e24;
+        --border: #26262e;
+        --gold: #FCAE25;
+        --amber: #F79024;
+        --orange: #F06520;
+        --off-white: #F2F0EC;
+        --muted: #4a4a56;
+        --muted-lt: #8a8797;
+        --pill: 50px;
+        --radius: 16px;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; padding-bottom: 80px; }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--bg);
+        color: var(--off-white);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
     nav {
         display: flex; align-items: center; justify-content: space-between;
-        padding: 16px 24px; border-bottom: 1px solid var(--border);
-        background: var(--surface); position: sticky; top: 0; z-index: 50;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(17,17,19,0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        position: sticky; top: 0; z-index: 50;
     }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo img { width: 32px; height: 32px; object-fit: contain; border-radius: 50%; }
-    .nav-logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--gold); letter-spacing: -0.02em; }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-email { font-size: 0.78rem; color: var(--muted-lt); }
-    .btn-signout {
-        padding: 7px 16px; border: 1.5px solid var(--border); border-radius: var(--pill);
+    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-logo img { width: 28px; height: 28px; object-fit: contain; border-radius: 50%; }
+    .nav-logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--gold); letter-spacing: -0.02em; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-user { font-size: 0.72rem; color: var(--muted-lt); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-out {
+        padding: 6px 14px; border: 1px solid var(--border); border-radius: var(--pill);
         background: transparent; color: var(--muted-lt); font-family: 'Poppins', sans-serif;
-        font-size: 0.78rem; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+        font-size: 0.72rem; cursor: pointer; transition: border-color 0.2s, color 0.2s;
     }
-    .btn-signout:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-out:hover { border-color: var(--orange); color: var(--orange); }
 
-    main { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
-    .page-title { font-family: 'Raleway', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -0.03em; margin-bottom: 4px; }
-    .page-sub { font-size: 0.85rem; color: var(--muted-lt); margin-bottom: 32px; line-height: 1.6; }
-
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .card {
-        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-        padding: 24px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    /* ── HERO GREETING ── */
+    .greeting-wrap {
+        padding: 28px 20px 0;
+        max-width: 600px; margin: 0 auto;
     }
-    .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
-    .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-lt); margin-bottom: 4px; }
-    .card-value { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--gold); }
+    .greeting-meta {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 0.72rem; color: var(--muted-lt); margin-bottom: 8px;
+        text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .live-dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 0 0 rgba(74,222,128,0.6);
+        animation: livePulse 2s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+        0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+        70%  { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+        100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+    }
+    .greeting-name {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 900;
+        font-size: 1.9rem;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin-bottom: 6px;
+    }
+    .greeting-name em { font-style: normal; color: var(--gold); }
+    .greeting-sub { font-size: 0.8rem; color: var(--muted-lt); line-height: 1.6; }
 
-    .section-title {
-        font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 1rem;
-        letter-spacing: -0.01em; margin-bottom: 14px;
+    /* ── SECTION LABEL ── */
+    .section-label {
+        padding: 28px 20px 14px;
+        max-width: 600px; margin: 0 auto;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .section-label-title {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800; font-size: 1rem;
+        letter-spacing: -0.02em;
+    }
+    .section-label-sub { font-size: 0.7rem; color: var(--muted-lt); }
+
+    /* ── TAB BAR ── */
+    .tabs-outer {
+        padding: 0 20px;
+        max-width: 600px; margin: 0 auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .tabs-outer::-webkit-scrollbar { display: none; }
+
+    .tabs {
+        display: flex; gap: 8px;
+        width: max-content;
+        padding-bottom: 2px;
+    }
+
+    .tab {
+        display: flex; align-items: center; gap: 6px;
+        padding: 9px 18px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--pill);
+        background: var(--surface);
+        color: var(--muted-lt);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem; font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color 0.25s, color 0.25s, background 0.25s, box-shadow 0.25s;
+        position: relative;
+    }
+    .tab .tab-emoji { font-size: 0.9rem; }
+    .tab:hover:not(.active) {
+        border-color: var(--muted);
+        color: var(--off-white);
+    }
+    .tab.active {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: rgba(252,174,37,0.08);
+        font-weight: 600;
+        box-shadow:
+            0 0 0 1px rgba(252,174,37,0.15),
+            0 0 16px rgba(252,174,37,0.18),
+            0 0 32px rgba(252,174,37,0.08);
+    }
+
+    /* ── LEADERBOARD ── */
+    .board-wrap {
+        padding: 14px 20px 100px;
+        max-width: 600px; margin: 0 auto;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active {
+        display: block;
+        animation: fadeSlide 0.22s ease both;
+    }
+    @keyframes fadeSlide {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bar entry */
+    .bar-entry {
+        display: flex; align-items: center; gap: 14px;
+        padding: 14px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        transition: border-color 0.2s, background 0.2s;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+    }
+    .bar-entry::before {
+        content: '';
+        position: absolute; inset: 0;
+        opacity: 0;
+        transition: opacity 0.2s;
+        background: linear-gradient(90deg, rgba(252,174,37,0.04) 0%, transparent 60%);
+    }
+    .bar-entry:hover { border-color: rgba(252,174,37,0.2); }
+    .bar-entry:hover::before { opacity: 1; }
+
+    /* #1 special glow */
+    .bar-entry.rank-1 {
+        border-color: rgba(252,174,37,0.3);
+        background: linear-gradient(135deg, rgba(252,174,37,0.07) 0%, var(--surface) 60%);
+        box-shadow: 0 0 24px rgba(252,174,37,0.08), 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .rank-num {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 900;
+        font-size: 1.3rem;
+        width: 32px;
+        text-align: center;
+        flex-shrink: 0;
+        color: var(--muted);
+        letter-spacing: -0.03em;
+    }
+    .rank-1 .rank-num {
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.4rem;
+    }
+    .rank-2 .rank-num { color: #c0c0c0; }
+    .rank-3 .rank-num { color: #cd7f32; }
+
+    .bar-info { flex: 1; min-width: 0; }
+    .bar-name {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 700; font-size: 0.95rem;
+        letter-spacing: -0.01em;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        margin-bottom: 2px;
+    }
+    .bar-meta {
+        font-size: 0.7rem; color: var(--muted-lt);
         display: flex; align-items: center; gap: 8px;
     }
-    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .bar-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--muted); }
 
-    /* Styled coming-soon cards */
-    .coming-card {
-        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-        padding: 28px 24px; display: flex; align-items: center; gap: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    .bar-score {
+        display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 4px;
     }
-    .coming-card-icon {
-        width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.5rem;
-        background: linear-gradient(135deg, rgba(252,174,37,0.12), rgba(240,101,32,0.08));
-        border: 1px solid rgba(252,174,37,0.15);
+    .score-val {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800; font-size: 1rem;
+        color: var(--gold);
     }
-    .coming-card-text h3 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-    .coming-card-text p { font-size: 0.78rem; color: var(--muted-lt); line-height: 1.6; }
-    .coming-badge {
-        margin-left: auto; flex-shrink: 0; padding: 4px 12px; border-radius: var(--pill);
-        background: rgba(252,174,37,0.1); border: 1px solid rgba(252,174,37,0.2);
-        font-size: 0.65rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em;
+    .rank-1 .score-val { font-size: 1.1rem; }
+    .score-label { font-size: 0.6rem; color: var(--muted-lt); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Crown badge on #1 */
+    .crown {
+        position: absolute; top: 10px; right: 12px;
+        font-size: 0.85rem; opacity: 0.7;
     }
 
-    /* Bottom mobile nav */
-    .bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-        background: var(--surface); border-top: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-around;
-        padding: 10px 0 16px;
+    /* ── CHECKIN CTA ── */
+    .checkin-cta {
+        background: linear-gradient(135deg, rgba(252,174,37,0.1), rgba(240,101,32,0.06));
+        border: 1px solid rgba(252,174,37,0.18);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        margin-top: 6px;
     }
-    .bnav-item {
-        display: flex; flex-direction: column; align-items: center; gap: 4px;
-        text-decoration: none; color: var(--muted-lt);
-        font-size: 0.62rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
-        transition: color 0.2s; padding: 4px 16px; border-radius: 10px; cursor: pointer; background: none; border: none; font-family: 'Poppins', sans-serif;
+    .checkin-cta p { font-size: 0.8rem; color: var(--muted-lt); line-height: 1.5; }
+    .checkin-cta strong { display: block; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--off-white); margin-bottom: 2px; }
+    .btn-checkin {
+        padding: 10px 20px; border: none; border-radius: var(--pill);
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #111; font-family: 'Raleway', sans-serif; font-weight: 800;
+        font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase;
+        cursor: pointer; white-space: nowrap; flex-shrink: 0;
+        box-shadow: 0 4px 14px rgba(252,174,37,0.28);
+        transition: opacity 0.2s, transform 0.15s;
     }
-    .bnav-item:hover { color: var(--off-white); }
-    .bnav-item.active { color: var(--gold); }
-    .bnav-icon { font-size: 1.3rem; }
+    .btn-checkin:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-checkin:active { transform: translateY(0); }
+
+    /* ── TOAST ── */
+    #toast {
+        position: fixed; bottom: 24px; left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--surface2); border: 1px solid var(--border);
+        color: var(--off-white); padding: 10px 22px;
+        border-radius: var(--pill); font-size: 0.8rem;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s, transform 0.3s;
+        white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        z-index: 999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+        .greeting-name { font-size: 1.6rem; }
+        .bar-entry { padding: 12px 14px; }
+        .bar-name { font-size: 0.88rem; }
+    }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
     <a href="../index.html" class="nav-logo">
         <img src="../Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
         <span class="nav-logo-name">Campus Cravings</span>
     </a>
     <div class="nav-right">
-        <span class="nav-email" id="user-email"></span>
-        <button class="btn-signout" onclick="signOut()">Sign Out</button>
+        <span class="nav-user" id="user-email"></span>
+        <button class="btn-out" onclick="signOut()">Sign Out</button>
     </div>
 </nav>
 
-<main>
-    <h1 class="page-title" id="greeting">Hey there 👋</h1>
-    <p class="page-sub">Here's what's happening on campus tonight.</p>
+<!-- GREETING -->
+<div class="greeting-wrap">
+    <div class="greeting-meta">
+        <span class="live-dot"></span>
+        <span id="live-time">Live · Mizzou</span>
+    </div>
+    <h1 class="greeting-name" id="greeting">Tonight at <em>Mizzou</em></h1>
+    <p class="greeting-sub">Where's everyone headed? Here's what's ranked right now.</p>
+</div>
 
-    <div class="cards">
-        <div class="card">
-            <div class="card-icon">📍</div>
-            <div class="card-label">Check-Ins</div>
-            <div class="card-value" id="stat-checkins">0</div>
+<!-- SECTION LABEL -->
+<div class="section-label">
+    <span class="section-label-title">🏆 Tonight's Leaderboard</span>
+    <span class="section-label-sub">Top 5 per category</span>
+</div>
+
+<!-- TABS -->
+<div class="tabs-outer">
+    <div class="tabs">
+        <button class="tab active" data-tab="fun" onclick="switchTab('fun', this)">
+            <span class="tab-emoji">🔥</span> Most Fun
+        </button>
+        <button class="tab" data-tab="value" onclick="switchTab('value', this)">
+            <span class="tab-emoji">💰</span> Best Value
+        </button>
+        <button class="tab" data-tab="fresh" onclick="switchTab('fresh', this)">
+            <span class="tab-emoji">🎓</span> Freshman Friendly
+        </button>
+        <button class="tab" data-tab="meal" onclick="switchTab('meal', this)">
+            <span class="tab-emoji">🍔</span> Best $10 Meal
+        </button>
+    </div>
+</div>
+
+<!-- LEADERBOARD PANELS -->
+<div class="board-wrap">
+
+    <!-- Most Fun -->
+    <div class="tab-panel active" id="panel-fun">
+        <div class="bar-entry rank-1">
+            <span class="crown">👑</span>
+            <div class="rank-num">1</div>
+            <div class="bar-info">
+                <div class="bar-name">Harpo's Bar & Grill</div>
+                <div class="bar-meta"><span>🎵 Live DJ</span><span class="bar-meta-dot"></span><span>142 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">98</span><span class="score-label">Fun Score</span></div>
         </div>
-        <div class="card">
-            <div class="card-icon">🗳️</div>
-            <div class="card-label">Votes Cast</div>
-            <div class="card-value" id="stat-votes">0</div>
+        <div class="bar-entry rank-2">
+            <div class="rank-num">2</div>
+            <div class="bar-info">
+                <div class="bar-name">Fieldhouse Bar & Grill</div>
+                <div class="bar-meta"><span>🏈 Game Night</span><span class="bar-meta-dot"></span><span>89 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">91</span><span class="score-label">Fun Score</span></div>
         </div>
-        <div class="card">
-            <div class="card-icon">🏆</div>
-            <div class="card-label">Top Bar Tonight</div>
-            <div class="card-value" id="stat-topbar" style="font-size:1rem;padding-top:4px;">Coming soon</div>
+        <div class="bar-entry rank-3">
+            <div class="rank-num">3</div>
+            <div class="bar-info">
+                <div class="bar-name">Club 506</div>
+                <div class="bar-meta"><span>🎤 Open Mic</span><span class="bar-meta-dot"></span><span>67 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">84</span><span class="score-label">Fun Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">4</div>
+            <div class="bar-info">
+                <div class="bar-name">The Heidelberg</div>
+                <div class="bar-meta"><span>🍺 Bar Night</span><span class="bar-meta-dot"></span><span>54 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">77</span><span class="score-label">Fun Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">5</div>
+            <div class="bar-info">
+                <div class="bar-name">Slippery Lips</div>
+                <div class="bar-meta"><span>🎶 Live Music</span><span class="bar-meta-dot"></span><span>41 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">71</span><span class="score-label">Fun Score</span></div>
+        </div>
+        <div class="checkin-cta">
+            <div><strong>Were you there?</strong><p>Check in to boost your bar's ranking.</p></div>
+            <button class="btn-checkin" onclick="showToast('Check-ins coming soon! 📍')">Check In</button>
         </div>
     </div>
 
-    <div class="section-title">Tonight's Rankings</div>
-    <div class="coming-card">
-        <div class="coming-card-icon">🏆</div>
-        <div class="coming-card-text">
-            <h3>Nightly Rankings</h3>
-            <p>See which bars are topping the charts tonight based on real student votes and check-ins.</p>
+    <!-- Best Value -->
+    <div class="tab-panel" id="panel-value">
+        <div class="bar-entry rank-1">
+            <span class="crown">👑</span>
+            <div class="rank-num">1</div>
+            <div class="bar-info">
+                <div class="bar-name">Booches Billiard Hall</div>
+                <div class="bar-meta"><span>🍺 $2 Drafts</span><span class="bar-meta-dot"></span><span>98 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">96</span><span class="score-label">Value Score</span></div>
         </div>
-        <span class="coming-badge">Coming Soon</span>
+        <div class="bar-entry rank-2">
+            <div class="rank-num">2</div>
+            <div class="bar-info">
+                <div class="bar-name">The Heidelberg</div>
+                <div class="bar-meta"><span>💵 Happy Hour til 9</span><span class="bar-meta-dot"></span><span>76 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">88</span><span class="score-label">Value Score</span></div>
+        </div>
+        <div class="bar-entry rank-3">
+            <div class="rank-num">3</div>
+            <div class="bar-info">
+                <div class="bar-name">Fieldhouse Bar & Grill</div>
+                <div class="bar-meta"><span>🍗 $5 Wings</span><span class="bar-meta-dot"></span><span>63 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">82</span><span class="score-label">Value Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">4</div>
+            <div class="bar-info">
+                <div class="bar-name">Slippery Lips</div>
+                <div class="bar-meta"><span>🥤 $3 Wells</span><span class="bar-meta-dot"></span><span>49 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">74</span><span class="score-label">Value Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">5</div>
+            <div class="bar-info">
+                <div class="bar-name">Harpo's Bar & Grill</div>
+                <div class="bar-meta"><span>🍺 Pint Night</span><span class="bar-meta-dot"></span><span>38 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">68</span><span class="score-label">Value Score</span></div>
+        </div>
+        <div class="checkin-cta">
+            <div><strong>Were you there?</strong><p>Check in to boost your bar's ranking.</p></div>
+            <button class="btn-checkin" onclick="showToast('Check-ins coming soon! 📍')">Check In</button>
+        </div>
     </div>
 
-    <div class="section-title" style="margin-top:28px;">Check In</div>
-    <div class="coming-card">
-        <div class="coming-card-icon">📍</div>
-        <div class="coming-card-text">
-            <h3>One-Tap Check In</h3>
-            <p>Let your crew know where you're at and boost your bar's ranking for the night.</p>
+    <!-- Freshman Friendly -->
+    <div class="tab-panel" id="panel-fresh">
+        <div class="bar-entry rank-1">
+            <span class="crown">👑</span>
+            <div class="rank-num">1</div>
+            <div class="bar-info">
+                <div class="bar-name">Fieldhouse Bar & Grill</div>
+                <div class="bar-meta"><span>😊 Chill Vibes</span><span class="bar-meta-dot"></span><span>112 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">95</span><span class="score-label">Freshman Score</span></div>
         </div>
-        <span class="coming-badge">Coming Soon</span>
+        <div class="bar-entry rank-2">
+            <div class="rank-num">2</div>
+            <div class="bar-info">
+                <div class="bar-name">The Heidelberg</div>
+                <div class="bar-meta"><span>🎉 Easy Entry</span><span class="bar-meta-dot"></span><span>84 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">87</span><span class="score-label">Freshman Score</span></div>
+        </div>
+        <div class="bar-entry rank-3">
+            <div class="rank-num">3</div>
+            <div class="bar-info">
+                <div class="bar-name">Booches Billiard Hall</div>
+                <div class="bar-meta"><span>🎱 Laid Back</span><span class="bar-meta-dot"></span><span>71 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">80</span><span class="score-label">Freshman Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">4</div>
+            <div class="bar-info">
+                <div class="bar-name">Harpo's Bar & Grill</div>
+                <div class="bar-meta"><span>🎶 Mixed Crowd</span><span class="bar-meta-dot"></span><span>59 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">72</span><span class="score-label">Freshman Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">5</div>
+            <div class="bar-info">
+                <div class="bar-name">Club 506</div>
+                <div class="bar-meta"><span>🎤 Good Energy</span><span class="bar-meta-dot"></span><span>44 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">65</span><span class="score-label">Freshman Score</span></div>
+        </div>
+        <div class="checkin-cta">
+            <div><strong>Were you there?</strong><p>Check in to boost your bar's ranking.</p></div>
+            <button class="btn-checkin" onclick="showToast('Check-ins coming soon! 📍')">Check In</button>
+        </div>
     </div>
 
-    <div class="section-title" style="margin-top:28px;">Vote & Rate</div>
-    <div class="coming-card">
-        <div class="coming-card-icon">🗳️</div>
-        <div class="coming-card-text">
-            <h3>Poll Sliders</h3>
-            <p>Rate bars on vibe, value, and crowd. Your votes shape the nightly leaderboard.</p>
+    <!-- Best $10 Meal -->
+    <div class="tab-panel" id="panel-meal">
+        <div class="bar-entry rank-1">
+            <span class="crown">👑</span>
+            <div class="rank-num">1</div>
+            <div class="bar-info">
+                <div class="bar-name">Harpo's Bar & Grill</div>
+                <div class="bar-meta"><span>🍔 $8 Burger & Fries</span><span class="bar-meta-dot"></span><span>103 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">97</span><span class="score-label">Meal Score</span></div>
         </div>
-        <span class="coming-badge">Coming Soon</span>
+        <div class="bar-entry rank-2">
+            <div class="rank-num">2</div>
+            <div class="bar-info">
+                <div class="bar-name">Fieldhouse Bar & Grill</div>
+                <div class="bar-meta"><span>🍗 $9 Chicken Basket</span><span class="bar-meta-dot"></span><span>81 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">89</span><span class="score-label">Meal Score</span></div>
+        </div>
+        <div class="bar-entry rank-3">
+            <div class="rank-num">3</div>
+            <div class="bar-info">
+                <div class="bar-name">Booches Billiard Hall</div>
+                <div class="bar-meta"><span>🍔 $6 Classic Burger</span><span class="bar-meta-dot"></span><span>68 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">83</span><span class="score-label">Meal Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">4</div>
+            <div class="bar-info">
+                <div class="bar-name">The Heidelberg</div>
+                <div class="bar-meta"><span>🌮 $7 Tacos</span><span class="bar-meta-dot"></span><span>52 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">75</span><span class="score-label">Meal Score</span></div>
+        </div>
+        <div class="bar-entry">
+            <div class="rank-num">5</div>
+            <div class="bar-info">
+                <div class="bar-name">Slippery Lips</div>
+                <div class="bar-meta"><span>🍟 $5 Late Night Fries</span><span class="bar-meta-dot"></span><span>39 check-ins</span></div>
+            </div>
+            <div class="bar-score"><span class="score-val">69</span><span class="score-label">Meal Score</span></div>
+        </div>
+        <div class="checkin-cta">
+            <div><strong>Were you there?</strong><p>Check in to boost your bar's ranking.</p></div>
+            <button class="btn-checkin" onclick="showToast('Check-ins coming soon! 📍')">Check In</button>
+        </div>
     </div>
-</main>
 
-<!-- Bottom nav -->
-<nav class="bottom-nav">
-    <a href="../index.html" class="bnav-item">
-        <span class="bnav-icon">🏠</span>Home
-    </a>
-    <button class="bnav-item active">
-        <span class="bnav-icon">📊</span>Dashboard
-    </button>
-    <button class="bnav-item" onclick="showToast('Check-ins coming soon!')">
-        <span class="bnav-icon">📍</span>Check In
-    </button>
-    <button class="bnav-item" onclick="showToast('Rankings coming soon!')">
-        <span class="bnav-icon">🏆</span>Rankings
-    </button>
-</nav>
+</div><!-- /board-wrap -->
 
-<!-- Toast -->
-<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f1f1f;border:1px solid #2a2a2a;color:#F5F5F0;padding:10px 22px;border-radius:50px;font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;font-family:'Poppins',sans-serif;"></div>
+<div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -185,14 +546,35 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Live time ticker
+function updateTime() {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    const mm = String(m).padStart(2, '0');
+    document.getElementById('live-time').textContent = `Live · Mizzou · ${h12}:${mm} ${ampm}`;
+}
+updateTime();
+setInterval(updateTime, 30000);
+
+// Tab switching
+function switchTab(id, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+}
+
+// Toast
 function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
-    t.style.opacity = '1';
-    t.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2500);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// Auth guard + personalize
 (async () => {
     const { data: { session } } = await db.auth.getSession();
     if (!session) { window.location.href = '../auth.html'; return; }
@@ -201,9 +583,9 @@ function showToast(msg) {
     if (profile?.role === 'admin')     { window.location.href = 'admin.html'; return; }
     if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
 
-    const email = session.user.email;
-    document.getElementById('user-email').textContent = email;
-    document.getElementById('greeting').textContent = 'Hey, ' + email.split('@')[0] + ' 👋';
+    const handle = session.user.email.split('@')[0];
+    document.getElementById('user-email').textContent = session.user.email;
+    document.getElementById('greeting').innerHTML = `Hey <em>${handle}</em> — Tonight at Mizzou`;
 })();
 
 async function signOut() {
