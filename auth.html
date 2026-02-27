@@ -446,9 +446,9 @@ async function redirectByRole(userId) {
     const role = profile?.role || 'student';
     if (role === 'admin')          { window.location.href = 'dashboard/admin.html';     return; }
     if (role === 'bar_owner')      { window.location.href = 'dashboard/bar-owner.html'; return; }
-    // Student: PGRST116 = no row exists (needs onboarding), anything else = proceed
-    const { data: onboarding, error: obErr } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
-    window.location.href = (obErr?.code === 'PGRST116') ? 'dashboard/onboarding.html' : 'dashboard/student.html';
+    // Only go to student dashboard if row is confirmed present
+    const { data: onboarding } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
+    window.location.href = onboarding ? 'dashboard/student.html' : 'dashboard/onboarding.html';
 }
 
 async function handleSignIn() {
