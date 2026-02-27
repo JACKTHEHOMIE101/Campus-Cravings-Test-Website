@@ -424,15 +424,24 @@ async function handleSignUp() {
     if (!email || !password) return showToast('Please fill in all fields.');
     if (password.length < 8) return showToast('Password must be 8+ characters.');
 
+    const redirectTo = window.location.origin + '/confirm.html';
+
     setLoading('signup-btn', true);
     const { data, error } = await db.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: 'https://campuscravings.app/confirm.html' }
+        options: { emailRedirectTo: redirectTo }
     });
     setLoading('signup-btn', false);
 
     if (error) return showToast(error.message);
+
+    // data.user can be null if the email already exists (Supabase silently no-ops)
+    if (!data.user) {
+        showToast('If this email is new, check your inbox to confirm.', 'success');
+        setTimeout(() => switchTab('signin'), 2500);
+        return;
+    }
 
     // Insert profile with selected role
     const { error: profileError } = await db.from('profiles').insert({
