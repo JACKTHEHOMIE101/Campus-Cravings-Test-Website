@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Onboarding Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #181818; --surface: #1f1f1f; --border: #2a2a2a;
+        --gold: #FCAE25; --amber: #F79024; --orange: #F06520;
+        --off-white: #F5F5F0; --muted: #5E5E5E; --muted-lt: #9895a1;
+        --red: #e05252; --green: #4ade80;
+        --pill: 50px; --radius: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--off-white); font-family: 'Poppins', sans-serif; min-height: 100vh; }
+    body::before {
+        content: ''; position: fixed; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse 60% 40% at 70% 10%, rgba(252,174,37,0.05) 0%, transparent 60%);
+    }
+
+    /* ── NAV ── */
+    nav {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 24px; border-bottom: 1px solid var(--border);
+        background: var(--surface); position: sticky; top: 0; z-index: 50;
+    }
+    .nav-left { display: flex; align-items: center; gap: 14px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 30px; height: 30px; border-radius: 50%; object-fit: contain; }
+    .nav-logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--gold); letter-spacing: -0.02em; }
+    .nav-badge {
+        font-size: 0.62rem; font-weight: 600; padding: 3px 10px;
+        background: rgba(252,174,37,0.12); color: var(--gold);
+        border: 1px solid rgba(252,174,37,0.25); border-radius: var(--pill);
+        text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .btn-back {
+        padding: 7px 16px; border: 1.5px solid var(--border); border-radius: var(--pill);
+        background: transparent; color: var(--muted-lt); font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+        text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── MAIN ── */
+    main { max-width: 980px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    .page-title { font-family: 'Raleway', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .page-sub { font-size: 0.82rem; color: var(--muted-lt); margin-bottom: 28px; line-height: 1.6; }
+    #last-updated { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── OVERVIEW CARDS ── */
+    .overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 36px; }
+    .ov-card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 20px 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .ov-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .ov-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-lt); margin-bottom: 4px; }
+    .ov-value { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--gold); }
+    .ov-sub { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+        font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.9rem;
+        letter-spacing: -0.01em; margin-bottom: 16px; margin-top: 32px;
+        display: flex; align-items: center; gap: 8px; color: var(--off-white);
+    }
+    .section-title .stag { font-size: 0.65rem; color: var(--muted-lt); font-family: 'Poppins', sans-serif; font-weight: 400; letter-spacing: 0.04em; }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── CHART GRID ── */
+    .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+
+    /* ── CHART CARD ── */
+    .chart-card {
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 20px 20px 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .chart-title {
+        font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 0.82rem;
+        letter-spacing: 0.02em; color: var(--off-white); margin-bottom: 14px;
+        display: flex; align-items: center; gap: 7px;
+    }
+    .chart-title .ctag { font-size: 0.65rem; color: var(--muted-lt); font-family: 'Poppins', sans-serif; font-weight: 400; }
+
+    /* ── BAR ROW ── */
+    .bar-row {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 9px;
+        opacity: 0; animation: fadeRow 0.4s ease forwards;
+    }
+    @keyframes fadeRow { to { opacity: 1; } }
+    .bar-label { font-size: 0.74rem; color: var(--off-white); min-width: 120px; line-height: 1.3; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 7px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+    .bar-fill {
+        height: 100%; width: 0; border-radius: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--amber));
+        transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bar-fill.orange { background: linear-gradient(90deg, var(--amber), var(--orange)); }
+    .bar-fill.red { background: linear-gradient(90deg, var(--orange), var(--red)); }
+    .bar-meta { font-size: 0.7rem; color: var(--gold); font-weight: 600; min-width: 52px; text-align: right; white-space: nowrap; }
+    .bar-count { color: var(--muted-lt); font-weight: 400; margin-left: 3px; }
+
+    /* Top 1 highlight */
+    .bar-row.top .bar-label { color: var(--gold); font-weight: 600; }
+    .bar-row.top .bar-fill { box-shadow: 0 0 8px rgba(252,174,37,0.35); }
+
+    /* ── NO DATA ── */
+    .no-data {
+        text-align: center; padding: 24px; color: var(--muted);
+        font-size: 0.8rem; border: 1px dashed var(--border); border-radius: 10px;
+    }
+
+    /* ── LOADING ── */
+    .loading { text-align: center; padding: 60px 0; color: var(--muted-lt); font-size: 0.85rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+        display: inline-block; width: 20px; height: 20px;
+        border: 2px solid rgba(252,174,37,0.2); border-top-color: var(--gold);
+        border-radius: 50%; animation: spin 0.8s linear infinite;
+        vertical-align: middle; margin-right: 8px;
+    }
+
+    /* ── INSIGHT CHIP ── */
+    .insight {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: rgba(252,174,37,0.08); border: 1px solid rgba(252,174,37,0.18);
+        border-radius: var(--pill); padding: 4px 12px; margin-top: 10px;
+        font-size: 0.69rem; color: var(--gold); line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+        .chart-grid { grid-template-columns: 1fr; }
+        .bar-label { min-width: 90px; font-size: 0.7rem; }
+        .overview-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-left">
+        <a href="../index.html" class="nav-logo">
+            <img src="../Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+            <span class="nav-logo-name">Campus Cravings</span>
+        </a>
+        <span class="nav-badge">Analytics</span>
+    </div>
+    <a href="admin.html" class="btn-back">← Admin</a>
+</nav>
+
+<main>
+    <h1 class="page-title">Onboarding Analytics</h1>
+    <p class="page-sub">Live breakdown of student onboarding responses. Use this to target your marketing, pricing, and bar partnerships.<br><span id="last-updated"></span></p>
+
+    <div id="loading" class="loading"><span class="spinner"></span>Loading responses…</div>
+    <div id="content" style="display:none">
+
+        <!-- Overview -->
+        <div class="overview-cards">
+            <div class="ov-card">
+                <div class="ov-icon">📋</div>
+                <div class="ov-label">Total Responses</div>
+                <div class="ov-value" id="ov-total">—</div>
+                <div class="ov-sub">completed onboarding</div>
+            </div>
+            <div class="ov-card">
+                <div class="ov-icon">🎓</div>
+                <div class="ov-label">Top Year</div>
+                <div class="ov-value" id="ov-top-year">—</div>
+                <div class="ov-sub" id="ov-top-year-pct"></div>
+            </div>
+            <div class="ov-card">
+                <div class="ov-icon">💰</div>
+                <div class="ov-label">Median Budget</div>
+                <div class="ov-value" id="ov-budget">—</div>
+                <div class="ov-sub">most common range</div>
+            </div>
+            <div class="ov-card">
+                <div class="ov-icon">🏆</div>
+                <div class="ov-label">Favorite Bar</div>
+                <div class="ov-value" id="ov-fav-bar" style="font-size:1rem;padding-top:4px;">—</div>
+                <div class="ov-sub" id="ov-fav-bar-pct"></div>
+            </div>
+            <div class="ov-card">
+                <div class="ov-icon">🔥</div>
+                <div class="ov-label">Top Night Type</div>
+                <div class="ov-value" id="ov-night" style="font-size:1rem;padding-top:4px;">—</div>
+                <div class="ov-sub" id="ov-night-pct"></div>
+            </div>
+        </div>
+
+        <!-- Section 1: Demographics -->
+        <div class="section-title">Demographics <span class="stag">Who's using the app</span></div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">🎓 Year in School</div>
+                <div id="chart-year"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">😄 Social Preference</div>
+                <div id="chart-social-pref"></div>
+            </div>
+        </div>
+
+        <!-- Section 2: Tonight Mode -->
+        <div class="section-title">Tonight Mode <span class="stag">Vibe + spending data</span></div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">🌙 Night Preference</div>
+                <div id="chart-night"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">💵 Budget Range</div>
+                <div id="chart-budget"></div>
+            </div>
+        </div>
+
+        <!-- Section 3: Bar Priorities -->
+        <div class="section-title">What They Want <span class="stag">Bar priority signals</span></div>
+        <div class="chart-grid">
+            <div class="chart-card" style="grid-column: 1 / -1">
+                <div class="chart-title">🎯 Top Bar Priorities <span class="ctag">multi-select, up to 2 per user</span></div>
+                <div id="chart-priorities"></div>
+            </div>
+        </div>
+
+        <!-- Section 4: Bar History -->
+        <div class="section-title">Bar History <span class="stag">Familiarity + sentiment</span></div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">🍸 Bars Visited</div>
+                <div id="chart-visited"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">🏆 Favorite Bar</div>
+                <div id="chart-fav"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">❌ Least Favorite Bar</div>
+                <div id="chart-least"></div>
+            </div>
+        </div>
+
+        <!-- Section 5: Behavioral -->
+        <div class="section-title">Behavioral Signals <span class="stag">Decision + social data</span></div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">😎 Social Comfort (new people)</div>
+                <div id="chart-comfort"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">🎯 Drink Specials Influence</div>
+                <div id="chart-specials"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">🗳️ Decision Method</div>
+                <div id="chart-decision"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">🔥 Go If It's Busy?</div>
+                <div id="chart-crowd"></div>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL     = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── Display label maps ──────────────────────────────────────
+const LABELS = {
+    year_in_school: { freshman: 'Freshman', sophomore: 'Sophomore', junior: 'Junior', senior: 'Senior', grad: 'Grad Student' },
+    night_preference: { wild: 'Wild / Packed', social: 'Social / Mid-level', chill: 'Chill / Laid-back', food: 'Just good food' },
+    budget: { under_15: 'Under $15', '15_30': '$15 – $30', '30_50': '$30 – $50', no_limit: "Doesn't matter" },
+    bar_priorities: {
+        cheap_drinks: 'Cheap drinks', music_dj: 'Music / DJ', dance_floor: 'Dance floor',
+        good_food: 'Good food', social_vibe: 'Social vibe', close_to_campus: 'Near campus',
+        less_crowded: 'Less crowded', upperclassmen: 'Upperclassmen vibe',
+        freshman_heavy: 'Freshman-heavy', sports_atmosphere: 'Sports atmosphere'
+    },
+    bars: {
+        harpos: "Harpo's", fieldhouse_bar: 'Fieldhouse Bar', booches_billiard_club: 'Booches',
+        heidelberg: 'Heidelberg', club_506: 'Club 506', slippery_lips: 'Slippery Lips',
+        the_blue_note: 'The Blue Note', shiloh_bar_grill: 'Shiloh Bar & Grill',
+        mcnally_s_irish_pub: "McNally's Irish Pub", the_vault: 'The Vault'
+    },
+    social_comfort: { yes: 'Yes — no problem', sometimes: 'Sometimes', no: 'No — prefer my crew' },
+    social_preference: { meet_new: 'Meet new people', tight_group: 'Tight crew only', doesnt_matter: "Doesn't matter" },
+    drink_specials_influence: { always: 'Always (plan around deals)', sometimes: 'Sometimes', rarely: 'Rarely', never: 'Never' },
+    decision_method: { group_vote: 'Group vote', follow_friend: 'Follow a friend', social_media: 'Social media', walk_in: 'Just walk in', deals: 'Based on deals' },
+    crowd_preference: { yes: 'Yes — busy = good time', not_too_packed: 'Only if not too packed', no: 'No — I like breathing room' },
+};
+
+// ── Aggregation helpers ─────────────────────────────────────
+function agg(rows, field, labelMap) {
+    const counts = {};
+    rows.forEach(r => {
+        const v = r[field];
+        if (v == null) return;
+        counts[v] = (counts[v] || 0) + 1;
+    });
+    return Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([val, cnt]) => ({ val, cnt, label: (labelMap && labelMap[val]) || val }));
+}
+
+function aggArray(rows, field, labelMap) {
+    const counts = {};
+    rows.forEach(r => {
+        (r[field] || []).forEach(v => {
+            counts[v] = (counts[v] || 0) + 1;
+        });
+    });
+    return Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([val, cnt]) => ({ val, cnt, label: (labelMap && labelMap[val]) || val }));
+}
+
+// ── Chart renderer ──────────────────────────────────────────
+function renderChart(containerId, data, total, colorClass = '') {
+    const el = document.getElementById(containerId);
+    if (!data.length) {
+        el.innerHTML = '<div class="no-data">No data yet</div>';
+        return;
+    }
+    el.innerHTML = data.map(({ label, cnt }, i) => {
+        const pct = Math.round(cnt * 100 / total);
+        const isTop = i === 0;
+        return `
+            <div class="bar-row${isTop ? ' top' : ''}" style="animation-delay:${i * 0.07}s">
+                <div class="bar-label">${label}</div>
+                <div class="bar-track">
+                    <div class="bar-fill ${colorClass}" data-pct="${pct}"></div>
+                </div>
+                <div class="bar-meta">${pct}%<span class="bar-count">(${cnt})</span></div>
+            </div>`;
+    }).join('');
+
+    // Animate fills after paint
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.querySelectorAll('.bar-fill').forEach(b => { b.style.width = b.dataset.pct + '%'; });
+    }));
+}
+
+// ── Auth guard + load ───────────────────────────────────────
+(async () => {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.href = '../auth.html'; return; }
+
+    const { data: profile } = await db.from('profiles').select('role').eq('id', session.user.id).single();
+    if (profile?.role !== 'admin') {
+        window.location.href = profile?.role === 'bar_owner' ? 'bar-owner.html' : 'student.html';
+        return;
+    }
+
+    // Fetch all onboarding responses
+    const { data: rows, error } = await db.from('onboarding_responses').select('*');
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+
+    if (error || !rows?.length) {
+        document.getElementById('content').innerHTML = '<div class="no-data" style="padding:60px;font-size:0.9rem;">No onboarding responses yet. Share the app!</div>';
+        return;
+    }
+
+    const N = rows.length;
+    document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()} · ${N} total response${N !== 1 ? 's' : ''}`;
+
+    // ── Overview cards ──
+    document.getElementById('ov-total').textContent = N;
+
+    const yearData   = agg(rows, 'year_in_school',   LABELS.year_in_school);
+    const nightData  = agg(rows, 'night_preference',  LABELS.night_preference);
+    const budgetData = agg(rows, 'budget',             LABELS.budget);
+    const favData    = agg(rows, 'favorite_bar',       LABELS.bars);
+    const leastData  = agg(rows, 'least_favorite_bar', LABELS.bars);
+    const priorityData = aggArray(rows, 'bar_priorities',  LABELS.bar_priorities);
+    const visitedData  = aggArray(rows, 'bars_visited',    LABELS.bars);
+    const comfortData  = agg(rows, 'social_comfort',   LABELS.social_comfort);
+    const socialData   = agg(rows, 'social_preference', LABELS.social_preference);
+    const specialsData = agg(rows, 'drink_specials_influence', LABELS.drink_specials_influence);
+    const decisionData = agg(rows, 'decision_method',   LABELS.decision_method);
+    const crowdData    = agg(rows, 'crowd_preference',   LABELS.crowd_preference);
+
+    if (yearData[0])   { document.getElementById('ov-top-year').textContent    = yearData[0].label;  document.getElementById('ov-top-year-pct').textContent  = `${Math.round(yearData[0].cnt*100/N)}% of users`; }
+    if (budgetData[0]) { document.getElementById('ov-budget').textContent      = budgetData[0].label; }
+    if (favData[0])    { document.getElementById('ov-fav-bar').textContent     = favData[0].label;   document.getElementById('ov-fav-bar-pct').textContent   = `${Math.round(favData[0].cnt*100/N)}% picked this`; }
+    if (nightData[0])  { document.getElementById('ov-night').textContent       = nightData[0].label; document.getElementById('ov-night-pct').textContent    = `${Math.round(nightData[0].cnt*100/N)}% of users`; }
+
+    // ── Charts ──
+    renderChart('chart-year',        yearData,      N);
+    renderChart('chart-night',       nightData,     N);
+    renderChart('chart-budget',      budgetData,    N);
+    renderChart('chart-priorities',  priorityData,  N, 'orange');
+    renderChart('chart-visited',     visitedData,   N);
+    renderChart('chart-fav',         favData,       N);
+    renderChart('chart-least',       leastData,     N, 'red');
+    renderChart('chart-comfort',     comfortData,   N);
+    renderChart('chart-social-pref', socialData,    N);
+    renderChart('chart-specials',    specialsData,  N);
+    renderChart('chart-decision',    decisionData,  N);
+    renderChart('chart-crowd',       crowdData,     N);
+})();
+</script>
+</body>
+</html>

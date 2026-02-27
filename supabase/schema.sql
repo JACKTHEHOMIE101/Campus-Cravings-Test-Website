@@ -130,3 +130,98 @@ create policy "Admins can view all onboarding"
             where id = auth.uid() and role = 'admin'
         )
     );
+
+-- Users can update their own response (required for upsert)
+drop policy if exists "Users can update own onboarding" on public.onboarding_responses;
+create policy "Users can update own onboarding"
+    on public.onboarding_responses for update
+    using (auth.uid() = user_id)
+    with check (auth.uid() = user_id);
+
+-- ============================================================
+-- ANALYTICS VIEWS (run these separately in SQL Editor)
+-- Query these in Supabase Studio → Table Editor for raw data
+-- ============================================================
+
+-- Year distribution
+create or replace view public.v_year_distribution as
+select
+    coalesce(year_in_school, 'skipped') as year,
+    count(*)                             as responses,
+    round(count(*) * 100.0 / sum(count(*)) over (), 1) as pct
+from public.onboarding_responses
+group by year_in_school
+order by responses desc;
+
+-- Night preference
+create or replace view public.v_night_preference as
+select
+    coalesce(night_preference, 'skipped') as preference,
+    count(*)                               as responses,
+    round(count(*) * 100.0 / sum(count(*)) over (), 1) as pct
+from public.onboarding_responses
+group by night_preference
+order by responses desc;
+
+-- Budget distribution
+create or replace view public.v_budget_distribution as
+select
+    coalesce(budget, 'skipped') as budget_range,
+    count(*)                     as responses,
+    round(count(*) * 100.0 / sum(count(*)) over (), 1) as pct
+from public.onboarding_responses
+group by budget
+order by responses desc;
+
+-- Bar priorities (unnested from array)
+create or replace view public.v_bar_priorities as
+select
+    priority,
+    count(*) as times_selected
+from public.onboarding_responses, unnest(bar_priorities) as priority
+group by priority
+order by times_selected desc;
+
+-- Bars visited (unnested from array)
+create or replace view public.v_bars_visited as
+select
+    bar,
+    count(*) as visit_count
+from public.onboarding_responses, unnest(bars_visited) as bar
+group by bar
+order by visit_count desc;
+
+-- Favorite bars
+create or replace view public.v_favorite_bars as
+select
+    favorite_bar              as bar,
+    count(*)                  as times_favorited,
+    round(count(*) * 100.0 / (select count(*) from public.onboarding_responses where favorite_bar is not null), 1) as pct
+from public.onboarding_responses
+where favorite_bar is not null
+group by favorite_bar
+order by times_favorited desc;
+
+-- Least favorite bars
+create or replace view public.v_least_favorite_bars as
+select
+    least_favorite_bar        as bar,
+    count(*)                  as times_disliked,
+    round(count(*) * 100.0 / (select count(*) from public.onboarding_responses where least_favorite_bar is not null), 1) as pct
+from public.onboarding_responses
+where least_favorite_bar is not null
+group by least_favorite_bar
+order by times_disliked desc;
+
+-- Full behavioral summary
+create or replace view public.v_behavioral_summary as
+select
+    decision_method,
+    crowd_preference,
+    drink_specials_influence,
+    social_comfort,
+    social_preference,
+    count(*) as user_count
+from public.onboarding_responses
+group by decision_method, crowd_preference, drink_specials_influence, social_comfort, social_preference
+order by user_count desc;
