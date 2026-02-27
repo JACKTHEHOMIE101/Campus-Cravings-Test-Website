@@ -444,9 +444,11 @@ document.getElementById('forgot-btn').dataset.label = 'Send Reset Link';
 async function redirectByRole(userId) {
     const { data: profile } = await db.from('profiles').select('role').eq('id', userId).single();
     const role = profile?.role || 'student';
-    if (role === 'admin')     window.location.href = 'dashboard/admin.html';
-    else if (role === 'bar_owner') window.location.href = 'dashboard/bar-owner.html';
-    else                      window.location.href = 'dashboard/student.html';
+    if (role === 'admin')          { window.location.href = 'dashboard/admin.html';     return; }
+    if (role === 'bar_owner')      { window.location.href = 'dashboard/bar-owner.html'; return; }
+    // Student: check if onboarding is complete
+    const { data: onboarding } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
+    window.location.href = onboarding ? 'dashboard/student.html' : 'dashboard/onboarding.html';
 }
 
 async function handleSignIn() {

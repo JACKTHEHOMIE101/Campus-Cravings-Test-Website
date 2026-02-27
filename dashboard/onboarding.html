@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campus Cravings — Quick Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+    :root {
+        --bg: #0e0e10;
+        --surface: #191920;
+        --border: #2a2a32;
+        --gold: #FCAE25;
+        --amber: #F79024;
+        --orange: #F06520;
+        --off-white: #F5F5F0;
+        --muted: #4e4e58;
+        --muted-lt: #9895a1;
+        --radius: 14px;
+        --pill: 50px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--bg);
+        color: var(--off-white);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(252,174,37,0.06) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* ── Progress bar ── */
+    .progress-track {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: rgba(255,255,255,0.05);
+        z-index: 100;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold), var(--orange));
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px rgba(252,174,37,0.5);
+        width: 0%;
+    }
+
+    /* ── Header ── */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 24px 0;
+        position: relative;
+        z-index: 10;
+        flex-shrink: 0;
+    }
+    .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    .header-logo img {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 4px rgba(252,174,37,0.4));
+    }
+    .header-logo-name {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: var(--gold);
+        letter-spacing: -0.02em;
+    }
+    .step-counter {
+        font-size: 0.72rem;
+        color: var(--muted-lt);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        padding: 4px 12px;
+        border-radius: var(--pill);
+    }
+    .step-counter .cur { color: var(--gold); font-weight: 700; }
+
+    /* ── Main content ── */
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 28px 24px 20px;
+        max-width: 540px;
+        margin: 0 auto;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        min-height: 0;
+    }
+
+    /* ── Question wrapper ── */
+    .q-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        position: relative;
+    }
+
+    .q-slide {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        animation: slideIn 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+    .q-slide.exit {
+        animation: slideOut 0.28s cubic-bezier(0.55, 0, 1, 0.45) both;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(36px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOut {
+        from { opacity: 1; transform: translateX(0); }
+        to   { opacity: 0; transform: translateX(-36px); }
+    }
+
+    /* ── Section label ── */
+    .section-label {
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 10px;
+        opacity: 0.75;
+    }
+
+    /* ── Question text ── */
+    .q-heading {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 900;
+        font-size: 1.5rem;
+        line-height: 1.2;
+        letter-spacing: -0.03em;
+        margin-bottom: 5px;
+    }
+    .q-sub {
+        font-size: 0.76rem;
+        color: var(--muted-lt);
+        margin-bottom: 20px;
+        line-height: 1.65;
+    }
+
+    /* ── Options ── */
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        overflow-y: auto;
+        flex: 1;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+        padding-right: 2px;
+        padding-bottom: 2px;
+    }
+    .options::-webkit-scrollbar { width: 3px; }
+    .options::-webkit-scrollbar-track { background: transparent; }
+    .options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .options.grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        align-content: start;
+    }
+
+    .opt {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 13px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        cursor: pointer;
+        transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.12s;
+        user-select: none;
+        position: relative;
+        -webkit-tap-highlight-color: transparent;
+        flex-shrink: 0;
+    }
+    .opt:active { transform: scale(0.975); }
+    .opt:hover:not(.selected) {
+        border-color: rgba(252,174,37,0.28);
+        background: rgba(255,255,255,0.025);
+    }
+    .opt.selected {
+        border-color: var(--gold);
+        background: rgba(252,174,37,0.07);
+        box-shadow: 0 0 0 1px rgba(252,174,37,0.12), 0 4px 14px rgba(252,174,37,0.09);
+    }
+
+    .opt-icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+    }
+    .opt-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+    .opt-label {
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: var(--off-white);
+        line-height: 1.3;
+    }
+    .opt.selected .opt-label { color: #fff; }
+    .opt-desc {
+        font-size: 0.69rem;
+        color: var(--muted-lt);
+        margin-top: 1px;
+        line-height: 1.4;
+    }
+
+    /* Multi-select check */
+    .opt-check {
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 0.18s, background 0.18s;
+        font-size: 0.58rem;
+        color: transparent;
+        font-weight: 700;
+    }
+    .opt.selected .opt-check {
+        border-color: var(--gold);
+        background: var(--gold);
+        color: #111;
+    }
+
+    /* Grid option layout */
+    .options.grid-2 .opt {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 13px 12px;
+    }
+    .options.grid-2 .opt-icon { font-size: 1.2rem; }
+    .options.grid-2 .opt-label { font-size: 0.78rem; }
+    .options.grid-2 .opt-check {
+        position: absolute;
+        top: 10px; right: 10px;
+    }
+
+    /* Limit hint */
+    .limit-hint {
+        font-size: 0.69rem;
+        color: var(--muted-lt);
+        text-align: center;
+        margin-bottom: 10px;
+        letter-spacing: 0.02em;
+    }
+    .limit-hint strong { color: var(--gold); }
+
+    /* ── Footer ── */
+    .q-footer {
+        padding-top: 18px;
+        flex-shrink: 0;
+    }
+    .btn-continue {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: var(--pill);
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        color: #111;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 22px rgba(252,174,37,0.28);
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-continue::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.14), transparent);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .btn-continue:not(:disabled):hover::after { opacity: 1; }
+    .btn-continue:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(252,174,37,0.38); }
+    .btn-continue:not(:disabled):active { transform: scale(0.99); }
+    .btn-continue:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    .btn-skip {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 13px;
+        font-size: 0.76rem;
+        color: var(--muted);
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: 'Poppins', sans-serif;
+        padding: 4px;
+        transition: color 0.18s;
+    }
+    .btn-skip:hover { color: var(--muted-lt); }
+
+    /* ── Success screen ── */
+    .success-screen {
+        display: none;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 0;
+        animation: fadeUp 0.5s ease both;
+    }
+    .success-screen.active { display: flex; }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .success-icon {
+        font-size: 3.5rem;
+        margin-bottom: 18px;
+        animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.15s both;
+    }
+    @keyframes popIn {
+        from { transform: scale(0.4); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+    .success-title {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 900;
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--gold), var(--orange));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .success-sub {
+        font-size: 0.82rem;
+        color: var(--muted-lt);
+        line-height: 1.75;
+        max-width: 280px;
+    }
+    .success-dots {
+        display: flex;
+        gap: 7px;
+        margin-top: 32px;
+        justify-content: center;
+    }
+    .success-dot {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: dotPulse 1.3s ease-in-out infinite;
+    }
+    .success-dot:nth-child(2) { animation-delay: 0.22s; }
+    .success-dot:nth-child(3) { animation-delay: 0.44s; }
+    @keyframes dotPulse {
+        0%, 100% { opacity: 0.25; transform: scale(0.75); }
+        50%       { opacity: 1;   transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+
+<div class="progress-track">
+    <div class="progress-fill" id="progress"></div>
+</div>
+
+<div class="header">
+    <a href="../index.html" class="header-logo">
+        <img src="../Brand_Assets/ChatGPT Image Feb 23, 2026, 02_43_48 PM.png" alt="Campus Cravings" />
+        <span class="header-logo-name">Campus Cravings</span>
+    </a>
+    <div class="step-counter"><span class="cur" id="step-num">1</span> / 12</div>
+</div>
+
+<main>
+    <div class="success-screen" id="success-screen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">You're all set.</div>
+        <p class="success-sub">We'll use your answers to show you the most relevant bars and rankings tonight at Mizzou.</p>
+        <div class="success-dots">
+            <div class="success-dot"></div>
+            <div class="success-dot"></div>
+            <div class="success-dot"></div>
+        </div>
+    </div>
+
+    <div class="q-wrap" id="q-wrap"></div>
+
+    <div class="q-footer" id="q-footer">
+        <button class="btn-continue" id="btn-continue" disabled onclick="advance()">Continue →</button>
+        <button class="btn-skip" onclick="skip()">Skip this question</button>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL     = 'https://dzysbtdgmzaydixomdpj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6eXNidGRnbXpheWRpeG9tZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NDY5NzUsImV4cCI6MjA4NjQyMjk3NX0.gB5h7i5Vs0oVySkrd4WHdlWcSUFTabH8zj5j47BosZo';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const BARS = [
+    "Harpo's", "Fieldhouse Bar", "Booches Billiard Club",
+    "Heidelberg", "Club 506", "Slippery Lips",
+    "The Blue Note", "Shiloh Bar & Grill", "McNally's Irish Pub", "The Vault"
+];
+
+function barSlug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+}
+
+const QUESTIONS = [
+    {
+        id: 'year_in_school',
+        section: '📚 Core Personalization',
+        heading: 'What year are you?',
+        sub: 'Critical for our freshman-friendly bar scores.',
+        type: 'single',
+        options: [
+            { value: 'freshman',  icon: '🥇', label: 'Freshman' },
+            { value: 'sophomore', icon: '📗', label: 'Sophomore' },
+            { value: 'junior',    icon: '📘', label: 'Junior' },
+            { value: 'senior',    icon: '📙', label: 'Senior' },
+            { value: 'grad',      icon: '🎓', label: 'Grad Student' },
+        ]
+    },
+    {
+        id: 'night_preference',
+        section: '🌙 Tonight Mode',
+        heading: 'What kind of night do you prefer?',
+        sub: 'Personalizes your Tonight Mode picks.',
+        type: 'single',
+        options: [
+            { value: 'wild',   icon: '🔥', label: 'Wild / Packed',      desc: 'Full send. Loud, packed, sweaty.' },
+            { value: 'social', icon: '🍻', label: 'Social / Mid-level',  desc: 'Good vibes, meet people.' },
+            { value: 'chill',  icon: '😌', label: 'Chill / Laid-back',   desc: 'Low-key, real conversations.' },
+            { value: 'food',   icon: '🍔', label: 'Just good food',      desc: 'Eat first. Decide later.' },
+        ]
+    },
+    {
+        id: 'budget',
+        section: '💰 Budget',
+        heading: "What's your typical night-out budget?",
+        sub: 'Feeds Best Value and $10 Drunk Meal rankings.',
+        type: 'single',
+        options: [
+            { value: 'under_15', icon: '💵', label: 'Under $15',      desc: 'Stretch every dollar.' },
+            { value: '15_30',    icon: '💵', label: '$15 – $30',      desc: 'Standard student budget.' },
+            { value: '30_50',    icon: '💵', label: '$30 – $50',      desc: 'Treating myself tonight.' },
+            { value: 'no_limit', icon: '💳', label: "Doesn't matter", desc: 'Vibes over price.' },
+        ]
+    },
+    {
+        id: 'bar_priorities',
+        section: '🎯 Priorities',
+        heading: 'What matters most choosing a bar?',
+        sub: 'Pick up to 2. Weights your personal ranking.',
+        type: 'multi',
+        limit: 2,
+        grid: true,
+        options: [
+            { value: 'cheap_drinks',      icon: '🍺', label: 'Cheap drinks' },
+            { value: 'music_dj',          icon: '🎵', label: 'Music / DJ' },
+            { value: 'dance_floor',       icon: '💃', label: 'Dance floor' },
+            { value: 'good_food',         icon: '🍔', label: 'Good food' },
+            { value: 'social_vibe',       icon: '😄', label: 'Social vibe' },
+            { value: 'close_to_campus',   icon: '📍', label: 'Near campus' },
+            { value: 'less_crowded',      icon: '🌬️', label: 'Less crowded' },
+            { value: 'upperclassmen',     icon: '👑', label: 'Upperclassmen' },
+            { value: 'freshman_heavy',    icon: '🎓', label: 'Freshman vibe' },
+            { value: 'sports_atmosphere', icon: '🏈', label: 'Sports bar' },
+        ]
+    },
+    {
+        id: 'bars_visited',
+        section: '📊 Bar History',
+        heading: 'Which bars have you been to?',
+        sub: 'Select all. Helps calibrate rankings and sampling bias.',
+        type: 'multi',
+        limit: 99,
+        options: BARS.map(b => ({ value: barSlug(b), icon: '🍸', label: b }))
+    },
+    {
+        id: 'favorite_bar',
+        section: '⭐ Favorites',
+        heading: 'Favorite bar right now?',
+        sub: 'Single pick. Feeds popularity weighting.',
+        type: 'single',
+        options: BARS.map(b => ({ value: barSlug(b), icon: '🏆', label: b }))
+    },
+    {
+        id: 'least_favorite_bar',
+        section: '👎 Balance',
+        heading: 'Least favorite bar?',
+        sub: 'Negative signal keeps rankings honest.',
+        type: 'single',
+        options: BARS.map(b => ({ value: barSlug(b), icon: '❌', label: b }))
+    },
+    {
+        id: 'social_comfort',
+        section: '🎓 Freshman Model',
+        heading: "Comfortable at bars where you don't know anyone?",
+        sub: 'Shapes social accessibility scores.',
+        type: 'single',
+        options: [
+            { value: 'yes',       icon: '😎', label: 'Yes',       desc: "Solo walk-in, no problem." },
+            { value: 'sometimes', icon: '🤔', label: 'Sometimes', desc: "Depends on the place." },
+            { value: 'no',        icon: '😬', label: 'No',        desc: "Prefer going with people I know." },
+        ]
+    },
+    {
+        id: 'social_preference',
+        section: '🎓 Freshman Model',
+        heading: 'When you go out, you prefer…',
+        sub: 'Social accessibility vs. group loyalty signal.',
+        type: 'single',
+        options: [
+            { value: 'meet_new',      icon: '🤝', label: 'Meeting new people', desc: "Half the fun is who you meet." },
+            { value: 'tight_group',   icon: '👥', label: 'Tight crew only',    desc: "I go with my people." },
+            { value: 'doesnt_matter', icon: '🎲', label: "Doesn't matter",     desc: "Depends on the night." },
+        ]
+    },
+    {
+        id: 'drink_specials_influence',
+        section: '💰 Value Scoring',
+        heading: 'Do drink specials influence where you go?',
+        sub: 'Weights the Best Value ranking.',
+        type: 'single',
+        options: [
+            { value: 'always',    icon: '🎯', label: 'Always',    desc: "I plan my night around deals." },
+            { value: 'sometimes', icon: '👀', label: 'Sometimes', desc: "I check, but it's not everything." },
+            { value: 'rarely',    icon: '😐', label: 'Rarely',    desc: "Nice to have, but meh." },
+            { value: 'never',     icon: '🚫', label: 'Never',     desc: "I don't care about the price." },
+        ]
+    },
+    {
+        id: 'decision_method',
+        section: '🧠 Behavior',
+        heading: 'How do you usually decide where to go?',
+        sub: 'Social influence modeling.',
+        type: 'single',
+        options: [
+            { value: 'group_vote',    icon: '🗳️', label: 'Group vote',     desc: "Democratic crew decision." },
+            { value: 'follow_friend', icon: '🫵', label: 'Follow a friend', desc: "I trust their judgment." },
+            { value: 'social_media',  icon: '📱', label: 'Social media',   desc: "Seen it on IG / TikTok." },
+            { value: 'walk_in',       icon: '🚶', label: 'Just walk in',   desc: "Vibes-based." },
+            { value: 'deals',         icon: '💸', label: 'Based on deals', desc: "Follow the cheapest night." },
+        ]
+    },
+    {
+        id: 'crowd_preference',
+        section: '🧠 Behavior',
+        heading: "More likely to go if it's already busy?",
+        sub: 'Crowd elasticity model.',
+        type: 'single',
+        options: [
+            { value: 'yes',            icon: '🔥', label: 'Yes',                   desc: "Busy = good time. I'm in." },
+            { value: 'not_too_packed', icon: '🙂', label: 'Only if not too packed', desc: "Sweet spot matters." },
+            { value: 'no',             icon: '🌙', label: 'No',                    desc: "I like breathing room." },
+        ]
+    },
+];
+
+let currentStep = 0;
+let answers     = {};
+let userId      = null;
+
+// ── Auth guard ──────────────────────────────────────────────
+(async () => {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.href = '../auth.html'; return; }
+
+    userId = session.user.id;
+
+    const { data: profile } = await db.from('profiles').select('role').eq('id', userId).single();
+    if (profile?.role === 'admin')     { window.location.href = 'admin.html';     return; }
+    if (profile?.role === 'bar_owner') { window.location.href = 'bar-owner.html'; return; }
+
+    // Already completed onboarding?
+    const { data: existing } = await db.from('onboarding_responses').select('id').eq('user_id', userId).single();
+    if (existing) { window.location.href = 'student.html'; return; }
+
+    renderQuestion(false);
+})();
+
+// ── Render ──────────────────────────────────────────────────
+function renderQuestion(animate) {
+    const q   = QUESTIONS[currentStep];
+    const wrap = document.getElementById('q-wrap');
+
+    // Progress
+    document.getElementById('progress').style.width = ((currentStep / QUESTIONS.length) * 100) + '%';
+    document.getElementById('step-num').textContent = currentStep + 1;
+
+    // Continue button state
+    updateContinueBtn(q);
+
+    // Build options HTML
+    const isGrid = q.grid && q.type === 'multi';
+    const limitHint = (q.type === 'multi' && q.limit < 99)
+        ? `<div class="limit-hint">Pick up to <strong>${q.limit}</strong></div>`
+        : '';
+
+    const optionsHTML = q.options.map(opt => {
+        const val  = answers[q.id];
+        const isSel = q.type === 'multi'
+            ? (val || []).includes(opt.value)
+            : val === opt.value;
+        return `
+            <div class="opt${isSel ? ' selected' : ''}"
+                 onclick="selectOpt('${q.id}','${opt.value}','${q.type}',${q.limit ?? 1})">
+                <span class="opt-icon">${opt.icon}</span>
+                <div class="opt-text">
+                    <div class="opt-label">${opt.label}</div>
+                    ${opt.desc ? `<div class="opt-desc">${opt.desc}</div>` : ''}
+                </div>
+                ${q.type === 'multi' ? '<div class="opt-check">✓</div>' : ''}
+            </div>`;
+    }).join('');
+
+    const html = `
+        <div class="q-slide">
+            <div class="section-label">${q.section}</div>
+            <h2 class="q-heading">${q.heading}</h2>
+            <p class="q-sub">${q.sub}</p>
+            ${limitHint}
+            <div class="options${isGrid ? ' grid-2' : ''}">${optionsHTML}</div>
+        </div>`;
+
+    if (!animate) {
+        wrap.innerHTML = html;
+        return;
+    }
+
+    const old = wrap.querySelector('.q-slide');
+    if (old) {
+        old.classList.add('exit');
+        setTimeout(() => { wrap.innerHTML = html; }, 260);
+    } else {
+        wrap.innerHTML = html;
+    }
+}
+
+// ── Selection ───────────────────────────────────────────────
+function selectOpt(qId, value, type, limit) {
+    if (type === 'single') {
+        answers[qId] = value;
+    } else {
+        if (!answers[qId]) answers[qId] = [];
+        const arr = answers[qId];
+        const idx = arr.indexOf(value);
+        if (idx === -1) {
+            if (arr.length < limit) arr.push(value);
+            else return; // at limit, do nothing
+        } else {
+            arr.splice(idx, 1);
+        }
+    }
+
+    // Update DOM in place (no slide)
+    const q = QUESTIONS[currentStep];
+    document.querySelectorAll('.opt').forEach((el, i) => {
+        const opt    = q.options[i];
+        const val    = answers[qId];
+        const isSel  = type === 'multi' ? val.includes(opt.value) : val === opt.value;
+        el.classList.toggle('selected', isSel);
+    });
+
+    updateContinueBtn(q);
+}
+
+function updateContinueBtn(q) {
+    const val      = answers[q.id];
+    const hasAnswer = q.type === 'multi' ? (val || []).length > 0 : !!val;
+    document.getElementById('btn-continue').disabled = !hasAnswer;
+}
+
+// ── Navigation ──────────────────────────────────────────────
+function advance() { advanceStep(); }
+
+function skip() {
+    const q = QUESTIONS[currentStep];
+    answers[q.id] = q.type === 'multi' ? [] : null;
+    advanceStep();
+}
+
+function advanceStep() {
+    currentStep++;
+    if (currentStep >= QUESTIONS.length) {
+        submitAndFinish();
+        return;
+    }
+    renderQuestion(true);
+    setTimeout(() => updateContinueBtn(QUESTIONS[currentStep]), 300);
+}
+
+// ── Submit ───────────────────────────────────────────────────
+async function submitAndFinish() {
+    document.getElementById('q-footer').style.display = 'none';
+    document.getElementById('q-wrap').style.display   = 'none';
+    document.getElementById('success-screen').classList.add('active');
+    document.getElementById('progress').style.width = '100%';
+
+    const payload = {
+        user_id:                  userId,
+        year_in_school:           answers.year_in_school           || null,
+        night_preference:         answers.night_preference         || null,
+        budget:                   answers.budget                   || null,
+        bar_priorities:           answers.bar_priorities?.length   ? answers.bar_priorities           : null,
+        bars_visited:             answers.bars_visited?.length     ? answers.bars_visited             : null,
+        favorite_bar:             answers.favorite_bar             || null,
+        least_favorite_bar:       answers.least_favorite_bar       || null,
+        social_comfort:           answers.social_comfort           || null,
+        social_preference:        answers.social_preference        || null,
+        drink_specials_influence: answers.drink_specials_influence || null,
+        decision_method:          answers.decision_method          || null,
+        crowd_preference:         answers.crowd_preference         || null,
+    };
+
+    const { error } = await db.from('onboarding_responses').insert(payload);
+    if (error) console.error('Onboarding save error:', error);
+
+    setTimeout(() => { window.location.href = 'student.html'; }, 2200);
+}
+</script>
+</body>
+</html>
